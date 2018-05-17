@@ -11,6 +11,7 @@
     "start": "react-scripts start",
     "start-now": "serve --single ./build",
     "build": "react-scripts build",
+    "cypress:run": "cypress run",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "deploy": "now -e NODE_ENV=production --token $NOW_TOKEN --npm --public",
