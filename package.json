@@ -18,6 +18,7 @@
     "alias": "now alias --token=$NOW_TOKEN"
   },
   "devDependencies": {
+    "cypress": "2.1.0",
     "now": "11.1.11",
     "serve": "6.5.7"
   }
