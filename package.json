@@ -17,6 +17,7 @@
     "alias": "now alias --token=$NOW_TOKEN"
   },
   "devDependencies": {
+    "now": "11.1.11",
     "serve": "6.5.7"
   }
 }
