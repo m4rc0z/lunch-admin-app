@@ -1,8 +1,10 @@
 describe('App', () => {
-    it('succesfully starts', () => {
-        // visit 'baseUrl'
-        cy.visit('/');
-        // assert if we are in good place
-        cy.contains('My First React App now its hacking time !!!');
+    it('should be able to login and logout', () => {
+        cy.visit('/home')
+            .get('[data-cy=loginBtn]')
+            .click()
+            .get('[data-cy=logoutBtn]')
+            .click()
+            .get('[data-cy=loginBtn]')
     });
 });

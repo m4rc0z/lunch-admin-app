@@ -3,7 +3,7 @@ node_js:
 - "node"
 cache: npm
 before_script:
-- npm start -- --silent &
+- npm run "start cypress" -- --silent &
 script:
 - npm run cypress:run && npm run deploy
 #after_script: npm run alias
