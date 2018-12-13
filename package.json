@@ -24,7 +24,7 @@
     "alias": "now alias --token=$NOW_TOKEN"
   },
   "devDependencies": {
-    "cypress": "2.1.0",
+    "cypress": "3.1.2",
     "flow-bin": "0.72.0",
     "now": "12.1.12",
     "serve": "6.5.7",
