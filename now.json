@@ -2,7 +2,13 @@
   "version": 2,
   "name": "create-react-app",
   "builds": [
-    { "src": "package.json", "use": "@now/static-build" }
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": {
+        "useBuildUtils": "@now/build-utils@canary"
+      }
+    }
   ],
   "routes": [
     {"src": "^/static/(.*)", "dest": "/static/$1"},
