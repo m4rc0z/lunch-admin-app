@@ -1,6 +1,7 @@
 {
-  "now": {
-    "name": "example",
-    "alias": "example.com"
-  }
+  "version": 2,
+  "name": "nodejs",
+  "builds": [
+    { "src": "*.js", "use": "@now/node" }
+  ]
 }
