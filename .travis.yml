@@ -12,6 +12,8 @@ deploy:
     script: now public --token $NOW_TOKEN
     skip_cleanup: true
     app: $PACKAGE_NAME
+    on:
+        all_branches: true
 env:
 global:
     secure: PqOWbQeePm1cCJTqYfdglqVrO78IGJQP9ppVz4gINZ2feLPUWOMFKApCGKpmlFVdsccKNZ6Lx6abOMIxCytiQ+dRreoVt4YxuKTEsCuzr5haOpz9xztmYwyW3D5xxuTim0l5pY2XIYYgciC0aihKHiJv4cZgoS4Rhb0cdcJZUubXZhr5dh4vrw9XU4eIUmVx5JH6CZEWqzAYO5z0APl+oAHAvN8BDYcA9gQKsHpexfiL0v2exQt0FHC9UIW9Sw3GsrLWfihnoeasZSG/uTgi1WrRxT6oQUypJiDGoEdjfOvJ0gjrISHbAPLB7U3HWtvo9qni8yv/qCUgIjJt1UF+hk6lHY4DiTr5iFUenfvUQdJcC7pztdpowm8jDKi3gkDVNM/zE8nkkWNz60qwpWpaZGyzYPGOhSimkG8XyJ4MCYuFuUMLWdw0EP8m/5DgJV/GX/tBT71nrOYUbhXhkJS0yDPzUYwLkTt2ixrYnPTTqgjuXMePiZpdZCPADULianwZAj8FbjKYYdkqOV5A+DUVdiCDKX2AtZ5335w8XKSFvM5arZjkSDjZwnVY1E/Bdm7Ed+VMAyOV59bCKy7aif2k42bLaxHJQvKf1PIxom/sEpgbrxnW2qIy7ZeU+DGv1i3bRJCWcmFrjkpAuANlt+5fFIiA14aD5zUnYHVgVcmkU8w=
