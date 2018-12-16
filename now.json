@@ -7,9 +7,6 @@
       "use": "@now/static-build",
       "config": {
         "useBuildUtils": "@now/build-utils@canary"
-      },
-      "env": {
-        "NODE_ENV": "production"
       }
     }
   ]
