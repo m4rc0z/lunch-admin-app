@@ -1,6 +1,12 @@
 {
   "version": 2,
   "name": "create-react-app",
+  "build": {
+    "env": {
+      "REACT_APP_ENV": "production",
+      "NODE_ENV": "production"
+    }
+  },
   "builds": [
     {
       "src": "package.json",
