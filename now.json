@@ -1,6 +1,18 @@
 {
-  "now": {
-    "name": "example",
-    "alias": "example.com"
-  }
+  "version": 2,
+  "name": "create-react-app",
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": {
+        "useBuildUtils": "@now/build-utils@canary"
+      }
+    }
+  ]
 }
