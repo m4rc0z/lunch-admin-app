@@ -33,7 +33,6 @@ describe('App', () => {
         cy.visit('/home', {
             onBeforeLoad: (win) => {
                 win.fetch = null;
-                window.localStorage.setItem('access_token', 'test');
                 win.localStorage.setItem('access_token', 'test');
             }
         })
