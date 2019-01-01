@@ -2,7 +2,11 @@
   "name": "lunch-admin-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3005",
+  "proxy": {
+    "/api/**": {
+      "target": "http://localhost:3005"
+    }
+  },
   "dependencies": {
     "auth0-js": "9.8.2",
     "history": "^4.7.2",

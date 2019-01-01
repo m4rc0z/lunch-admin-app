@@ -4,7 +4,7 @@ describe('App', () => {
         cy.server();
         cy.route({
             method: 'GET',
-            url: '/api/api/public',
+            url: '/api/public',
             response: { message: publicResponse }
         });
 
@@ -27,7 +27,7 @@ describe('App', () => {
         cy.server();
         cy.route({
             method: 'GET',
-            url: '/api/api/private',
+            url: '/api/private',
             response: { message: privateResponse }
         });
         cy.visit('/home', {

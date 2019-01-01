@@ -13,9 +13,9 @@ class Home extends Component {
     componentDidMount() {
         let fetchPromise;
         if (!this.props.auth.getAccessToken()) {
-            fetchPromise = fetch(`/api/api/public`);
+            fetchPromise = fetch(`/api/public`);
         } else {
-            fetchPromise = fetch('/api/api/private', {
+            fetchPromise = fetch('/api/private', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
