@@ -1,13 +1,47 @@
 import React, {Component} from 'react';
-import {Navbar, Button} from 'react-bootstrap';
+import {AppBar, Toolbar, Typography} from '@material-ui/core';
+import styled from "styled-components";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import LoginIcon from "@material-ui/icons/ExitToApp";
+import LogoutIcon from "@material-ui/icons/PowerSettingsNew";
+import Button from "@material-ui/core/Button/Button";
+import * as PropTypes from "prop-types";
+import {REACT_APP_MOCK} from "../config";
+
+const StyledNavBar = styled(AppBar)`
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    
+    && {
+      background-color: transparent;
+    }
+`;
+
+const PageName = styled(Typography)`
+  flex: 1;
+  && {
+    color: inherit;
+  }
+`;
+
+const StyledIconButton = styled(IconButton)`
+  && {
+   color: inherit; 
+  }
+`;
 
 class NavBar extends Component {
     goTo(route) {
-        this.props.history.replace(`/${route}`)
+        this.props.history.replace(` /${route}`)
     }
 
     login() {
-        if (process.env.REACT_APP_MOCK) {
+        if (REACT_APP_MOCK) {
             this.mockLogin();
         } else {
             this.props.auth.login();
@@ -40,47 +74,50 @@ class NavBar extends Component {
 
         return (
             <div>
-                <Navbar fluid>
-                    <Navbar.Header>
-                        <Button
-                            bsStyle="primary"
-                            className="btn-margin"
-                            onClick={this.goTo.bind(this, 'home')}
-                            data-cy="homeBtn"
-                        >
-                            Home
-                        </Button>
+                <StyledNavBar>
+                    <Toolbar>
+                        <StyledIconButton aria-label="Menu">
+                            <MenuIcon/>
+                        </StyledIconButton>
+                        <PageName>
+                            Lunch Restaurant App
+                        </PageName>
                         {
                             !isAuthenticated() && (
-                                <Button
-                                    id="qsLoginBtn"
-                                    bsStyle="primary"
-                                    className="btn-margin"
+                                <StyledIconButton
                                     onClick={this.login.bind(this)}
                                     data-cy="loginBtn"
                                 >
-                                    Log In
-                                </Button>
+                                    <LoginIcon/>
+                                </StyledIconButton>
                             )
                         }
                         {
                             isAuthenticated() && (
-                                <Button
-                                    id="qsLogoutBtn"
-                                    bsStyle="primary"
-                                    className="btn-margin"
+                                <StyledIconButton
                                     onClick={this.logout.bind(this)}
                                     data-cy="logoutBtn"
                                 >
-                                    Log Out
-                                </Button>
+                                    <LogoutIcon/>
+                                </StyledIconButton>
                             )
                         }
-                    </Navbar.Header>
-                </Navbar>
+                    </Toolbar>
+                </StyledNavBar>
+                <Button
+                    onClick={this.goTo.bind(this, 'home')}
+                    data-cy="homeBtn"
+                >
+                    Home
+                </Button>
             </div>
         );
     }
 }
+
+NavBar.propTypes = {
+    auth: PropTypes.func.isRequired,
+    history: PropTypes.func.isRequired
+};
 
 export default NavBar;

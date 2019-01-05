@@ -1,27 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import isAuthenticated from "../auth/isAuthenticated";
+import React from "react";
+import styled from "styled-components";
+import backgroundImg from '../assets/img/restaurant_background_bw.jpg';
 
-const Header = () => (
-    <header>
-        <h1>React Auth0 App</h1>
-        <nav>
-            <ul>
-                <li><Link to='/'>Top</Link></li>
-                <li><Link to='/private'>Private</Link></li>
-                {
-                    !isAuthenticated() && (
-                        <li><Link to='/login'>Login</Link></li>
-                    )
-                }
-                {
-                    isAuthenticated() && (
-                        <li><Link to='/logout'>Logout</Link></li>
-                    )
-                }
-            </ul>
-        </nav>
-    </header>
-);
+const HeaderContainer = styled.div`
+  height: 100vh;
+  background-image: url(${backgroundImg});
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+`;
+function HeaderComponent() {
+    return (
+        <HeaderContainer/>
+    );
+}
 
-export default Header;
+export default HeaderComponent;

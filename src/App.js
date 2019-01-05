@@ -1,25 +1,28 @@
 import React, {Component} from 'react';
 import './App.css';
-import logo from './logo.svg';
+import HeaderComponent from "./components/Header";
+import styled from "styled-components";
 import NavBar from "./components/NavBar";
+import * as PropTypes from 'prop-types'
+
+const NavBarContainer = styled(NavBar)`
+  color: #ffffff;
+`;
 
 class App extends Component {
     render() {
         return (
             <div>
-                <div className="App">
-                    <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo"/>
-                        <h1 className="App-title">Welcome to React</h1>
-                    </header>
-                    <p className="App-intro">
-                        My First React App now its hacking time !!!
-                    </p>
-                </div>
-                <NavBar auth={this.props.auth} {...this.props}/>
+                <NavBarContainer auth={this.props.auth} history={this.props.history} {...this.props}/>
+                <HeaderComponent {...this.props}/>
             </div>
         );
     }
 }
+
+App.propTypes = {
+    auth: PropTypes.func.isRequired,
+    history: PropTypes.func.isRequired
+};
 
 export default App;
