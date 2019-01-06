@@ -9,6 +9,7 @@ const NavBarContainer = styled(NavBar)`
   color: #ffffff;
 `;
 
+// TODO: change to functional component
 class App extends Component {
     render() {
         return (
@@ -21,8 +22,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-    auth: PropTypes.func.isRequired,
-    history: PropTypes.func.isRequired
+    auth: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 };
 
 export default App;

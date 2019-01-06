@@ -4,6 +4,7 @@ import App from './App';
 import Auth from './Auth/Auth';
 import history from './history';
 import Callback from "./callback/Callback";
+import Home from "./Home/Home";
 
 const auth = new Auth();
 
@@ -18,7 +19,7 @@ export const makeMainRoutes = () => {
       <Router history={history}>
         <div>
           <Route path="/" render={(props) => <App auth={auth} history={history} {...props} />} />
-          {/*<Route path="/home" render={(props) => <Home auth={auth} {...props} />} />*/}
+          <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
             return <Callback {...props} /> 

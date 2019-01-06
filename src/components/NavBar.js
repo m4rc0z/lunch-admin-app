@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import {AppBar, Toolbar, Typography} from '@material-ui/core';
 import styled from "styled-components";
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import LoginIcon from "@material-ui/icons/ExitToApp";
 import LogoutIcon from "@material-ui/icons/PowerSettingsNew";
-import Button from "@material-ui/core/Button/Button";
 import * as PropTypes from "prop-types";
 import {REACT_APP_MOCK} from "../config";
+import SideNavigation from "./SideNavigation";
 
 const StyledNavBar = styled(AppBar)`
     display: flex;
@@ -37,7 +36,7 @@ const StyledIconButton = styled(IconButton)`
 
 class NavBar extends Component {
     goTo(route) {
-        this.props.history.replace(` /${route}`)
+        this.props.history.replace(`/${route}`)
     }
 
     login() {
@@ -76,9 +75,7 @@ class NavBar extends Component {
             <div>
                 <StyledNavBar>
                     <Toolbar>
-                        <StyledIconButton aria-label="Menu">
-                            <MenuIcon/>
-                        </StyledIconButton>
+                        <SideNavigation clickHome={() => this.goTo( 'home')}/>
                         <PageName>
                             Lunch Restaurant App
                         </PageName>
@@ -104,20 +101,14 @@ class NavBar extends Component {
                         }
                     </Toolbar>
                 </StyledNavBar>
-                <Button
-                    onClick={this.goTo.bind(this, 'home')}
-                    data-cy="homeBtn"
-                >
-                    Home
-                </Button>
             </div>
         );
     }
 }
 
 NavBar.propTypes = {
-    auth: PropTypes.func.isRequired,
-    history: PropTypes.func.isRequired
+    auth: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 };
 
 export default NavBar;

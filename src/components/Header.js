@@ -10,6 +10,7 @@ const HeaderContainer = styled.div`
   background-position: center;
   background-size: cover;
 `;
+
 function HeaderComponent() {
     return (
         <HeaderContainer/>

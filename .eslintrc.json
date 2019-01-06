@@ -10,7 +10,8 @@
     }
   },
   "plugins": [
-    "react"
+    "react",
+    "cypress"
   ],
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
@@ -34,6 +35,7 @@
   "env": {
     "browser": true,
     "amd": true,
-    "node": true
+    "node": true,
+    "cypress/globals": true
   }
 }

@@ -39,4 +39,27 @@ describe('App', () => {
             .get('[data-cy=responseText]')
             .invoke('text').should('contain', privateResponse);
     });
+
+    it('should be able to open SideNavigation and click on home', () => {
+        const publicResponse = 'public response';
+        cy.server();
+        cy.route({
+            method: 'GET',
+            url: '/api/public',
+            response: { message: publicResponse }
+        });
+
+        cy.visit('/', {
+            onBeforeLoad: (win) => {
+                win.fetch = null
+            }
+        })
+            .get('[data-cy=responseText]').should('not.exist')
+            .get('[data-cy=menuBtn]')
+                .click()
+            .get('[data-cy=homeBtn]')
+                .click()
+            .get('[data-cy=responseText]')
+            .invoke('text').should('contain', publicResponse)
+    });
 });
