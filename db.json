@@ -1,0 +1,41 @@
+{
+  "restaurant-id": 1,
+  "menus": [
+    {
+      "price": 8.5,
+      "date": "2019-01-02T18:25:43.511Z",
+      "courses": [
+        {
+          "course": 1,
+          "description": "Salat"
+        },
+        {
+          "course": 2,
+          "description": "Schnitzel"
+        },
+        {
+          "course": 3,
+          "description": "Eis"
+        }
+      ]
+    },
+    {
+      "price": 9.5,
+      "date": "2019-01-03T18:25:43.511Z",
+      "courses": [
+        {
+          "course": 1,
+          "description": "Brot"
+        },
+        {
+          "course": 2,
+          "description": "Steak"
+        },
+        {
+          "course": 3,
+          "description": "Strudel"
+        }
+      ]
+    }
+  ]
+}
