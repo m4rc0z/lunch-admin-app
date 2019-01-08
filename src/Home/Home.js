@@ -1,4 +1,17 @@
 import React, {Component} from 'react';
+import styled from "styled-components";
+import * as PropTypes from "prop-types";
+
+const StyledHomeContainer = styled.div`
+  background-color: white;
+  padding: 20px;
+  margin: -60px 30px 0;
+  border-radius: 6px;
+  box-shadow: 
+    0 16px 24px 2px rgba(0, 0, 0, 0.14), 
+    0 6px 30px 5px rgba(0, 0, 0, 0.12), 
+    0 8px 10px -5px rgba(0, 0, 0, 0.2)
+`;
 
 class Home extends Component {
     constructor(props) {
@@ -35,7 +48,7 @@ class Home extends Component {
     render() {
         const {isAuthenticated} = this.props.auth;
         return (
-            <div className="container">
+            <StyledHomeContainer className="container">
                 {
                     isAuthenticated() && (
                         <h4>
@@ -61,9 +74,15 @@ class Home extends Component {
                     response:
                     <pre data-cy="responseText">{JSON.stringify(this.state.response)}</pre>
                 </div>
-            </div>
+            </StyledHomeContainer>
         );
     }
 }
+
+
+Home.propTypes = {
+    auth: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+};
 
 export default Home;

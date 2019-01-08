@@ -17,7 +17,9 @@ const StyledNavBar = styled(AppBar)`
     z-index: 1030;
     
     && {
-      background-color: transparent;
+      background-color: ${(props) => props.scrolleddown === 'true' ? 'white' : 'transparent' };
+      color: ${(props) => props.scrolleddown === 'true' ? 'black' : undefined };
+      transition: all 250ms ease-in;
     }
 `;
 
@@ -35,6 +37,20 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 class NavBar extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { scrolledDown: 'false' };
+    }
+
+    handleScroll() {
+        if (window.scrollY > 50) {
+            this.setState({ scrolledDown: 'true' })
+        } else {
+            this.setState({ scrolledDown: 'false' })
+        }
+    }
+
     goTo(route) {
         this.props.history.replace(`/${route}`)
     }
@@ -61,6 +77,7 @@ class NavBar extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
         const {renewSession} = this.props.auth;
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -73,7 +90,7 @@ class NavBar extends Component {
 
         return (
             <div>
-                <StyledNavBar>
+                <StyledNavBar scrolleddown={this.state.scrolledDown}>
                     <Toolbar>
                         <SideNavigation clickHome={() => this.goTo( 'home')}/>
                         <PageName>
