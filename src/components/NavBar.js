@@ -9,17 +9,13 @@ import {REACT_APP_MOCK} from "../config";
 import SideNavigation from "./SideNavigation";
 
 const StyledNavBar = styled(AppBar)`
-    display: flex;
-    position: fixed;
     top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
     
     && {
-      background-color: ${(props) => props.scrolleddown === 'true' ? 'white' : 'transparent' };
-      color: ${(props) => props.scrolleddown === 'true' ? 'black' : undefined };
+      background-color: ${(props) => props.scrolleddown === 'true' || props.landingpage === 'false' ? 'white' : 'transparent'};
+      color: ${(props) => props.scrolleddown === 'true' || props.landingpage === 'false'  ? 'black' : undefined};
       transition: all 250ms ease-in;
+      position: ${(props) => props.landingpage === 'true' ? 'fixed' : 'sticky'};
     }
 `;
 
@@ -90,7 +86,7 @@ class NavBar extends Component {
 
         return (
             <div>
-                <StyledNavBar scrolleddown={this.state.scrolledDown}>
+                <StyledNavBar scrolleddown={this.state.scrolledDown} landingpage={this.props.landingPage}>
                     <Toolbar>
                         <SideNavigation clickHome={() => this.goTo( 'home')}/>
                         <PageName>
@@ -125,7 +121,8 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
     auth: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    landingPage: PropTypes.string
 };
 
 export default NavBar;
