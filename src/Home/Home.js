@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import styled from "styled-components";
 import * as PropTypes from "prop-types";
+import Menus from "../menu/Menus";
 
 const StyledHomeContainer = styled.div`
-  width: 100%;
   height: 100%;
   background-color: lightgray;
   padding: 20px;
@@ -45,6 +45,7 @@ class Home extends Component {
         const {isAuthenticated} = this.props.auth;
         return (
             <StyledHomeContainer className="container">
+                <Menus auth={this.props.auth} isAuthenticated={isAuthenticated()}/>
                 {
                     isAuthenticated() && (
                         <h4>
