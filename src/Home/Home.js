@@ -1,4 +1,13 @@
 import React, {Component} from 'react';
+import styled from "styled-components";
+import * as PropTypes from "prop-types";
+import Menus from "../menu/Menus";
+
+const StyledHomeContainer = styled.div`
+  height: 100%;
+  background-color: lightgray;
+  padding: 20px;
+`;
 
 class Home extends Component {
     constructor(props) {
@@ -35,7 +44,8 @@ class Home extends Component {
     render() {
         const {isAuthenticated} = this.props.auth;
         return (
-            <div className="container">
+            <StyledHomeContainer className="container">
+                <Menus auth={this.props.auth} isAuthenticated={isAuthenticated()}/>
                 {
                     isAuthenticated() && (
                         <h4>
@@ -61,9 +71,15 @@ class Home extends Component {
                     response:
                     <pre data-cy="responseText">{JSON.stringify(this.state.response)}</pre>
                 </div>
-            </div>
+            </StyledHomeContainer>
         );
     }
 }
+
+
+Home.propTypes = {
+    auth: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+};
 
 export default Home;

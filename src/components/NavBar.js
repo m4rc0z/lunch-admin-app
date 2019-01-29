@@ -9,15 +9,13 @@ import {REACT_APP_MOCK} from "../config";
 import SideNavigation from "./SideNavigation";
 
 const StyledNavBar = styled(AppBar)`
-    display: flex;
-    position: fixed;
     top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
     
     && {
-      background-color: transparent;
+      background-color: ${(props) => props.scrolleddown === 'true' || props.landingpage === 'false' ? 'white' : 'transparent'};
+      color: ${(props) => props.scrolleddown === 'true' || props.landingpage === 'false'  ? 'black' : undefined};
+      transition: all 250ms ease-in;
+      position: ${(props) => props.landingpage === 'true' ? 'fixed' : 'sticky'};
     }
 `;
 
@@ -35,6 +33,20 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 class NavBar extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { scrolledDown: 'false' };
+    }
+
+    handleScroll() {
+        if (window.scrollY > 50) {
+            this.setState({ scrolledDown: 'true' })
+        } else {
+            this.setState({ scrolledDown: 'false' })
+        }
+    }
+
     goTo(route) {
         this.props.history.replace(`/${route}`)
     }
@@ -61,6 +73,7 @@ class NavBar extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
         const {renewSession} = this.props.auth;
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -73,7 +86,7 @@ class NavBar extends Component {
 
         return (
             <div>
-                <StyledNavBar>
+                <StyledNavBar scrolleddown={this.state.scrolledDown} landingpage={this.props.landingPage}>
                     <Toolbar>
                         <SideNavigation clickHome={() => this.goTo( 'home')}/>
                         <PageName>
@@ -108,7 +121,8 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
     auth: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    landingPage: PropTypes.string
 };
 
 export default NavBar;
