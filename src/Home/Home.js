@@ -19,28 +19,6 @@ class Home extends Component {
         this.props.auth.login();
     }
 
-    componentDidMount() {
-        let fetchPromise;
-        if (!this.props.auth.getAccessToken()) {
-            fetchPromise = fetch(`/api/public`);
-        } else {
-            fetchPromise = fetch('/api/private', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${this.props.auth.getAccessToken()}`
-                }
-            });
-        }
-
-        fetchPromise
-            .then(res => res.json())
-            .then(res => {
-                this.setState({response: res});
-            });
-    }
-
     render() {
         const {isAuthenticated} = this.props.auth;
         return (
@@ -48,14 +26,14 @@ class Home extends Component {
                 <Menus auth={this.props.auth} isAuthenticated={isAuthenticated()}/>
                 {
                     isAuthenticated() && (
-                        <h4>
+                        <h4 data-cy={`responseText`}>
                             You are logged in!
                         </h4>
                     )
                 }
                 {
                     !isAuthenticated() && (
-                        <h4>
+                        <h4 data-cy={`responseText`}>
                             You are not logged in! Please{' '}
                             <a
                                 style={{cursor: 'pointer'}}
@@ -67,10 +45,6 @@ class Home extends Component {
                         </h4>
                     )
                 }
-                <div>
-                    response:
-                    <pre data-cy="responseText">{JSON.stringify(this.state.response)}</pre>
-                </div>
             </StyledHomeContainer>
         );
     }

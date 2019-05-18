@@ -7,6 +7,9 @@ import Callback from "./callback/Callback";
 import Home from "./Home/Home";
 import styled, {injectGlobal} from "styled-components";
 import NavBar from "./components/NavBar";
+import connect from "react-redux/es/connect/connect";
+import {getMenusAction, setMenusAction} from "./menu/redux/menuActions";
+import {showNotificationAction} from "./components/notification/redux/notificationActions";
 
 const StyledRouteContainer = styled.div`
   height: 100%;
@@ -40,18 +43,18 @@ const handleAuthentication = ({location}) => {
     }
 };
 
-export const makeMainRoutes = () => {
+function MainRoutes() {
     return (
         <Router history={history}>
             <StyledMainRouteContainer>
                 <Switch>
                     <Route exact={true} path="/" render={() => {
-                            return (
-                                <StyledRouteContainer>
-                                    <NavBar auth={auth} history={history} landingPage={"true"}/>
-                                    <StyledRouteContainer><App/></StyledRouteContainer>
-                                </StyledRouteContainer>
-                            );
+                        return (
+                            <StyledRouteContainer>
+                                <NavBar auth={auth} history={history} landingPage={"true"}/>
+                                <StyledRouteContainer><App/></StyledRouteContainer>
+                            </StyledRouteContainer>
+                        );
                     }}/>
                     <Route path="/home" render={(props) => {
                         return (
@@ -69,4 +72,17 @@ export const makeMainRoutes = () => {
             </StyledMainRouteContainer>
         </Router>
     );
-};
+}
+
+const mapStateToProps = state => ({
+    ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+    setMenusAction: (payload) => dispatch(setMenusAction(payload)),
+    getMenusAction: (payload) => dispatch(getMenusAction(payload)),
+    showNotificationAction: (payload) => dispatch(showNotificationAction(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainRoutes);
+

@@ -1,20 +1,8 @@
-import {getWeekDay, getWeekNumber} from "../dateUtil";
+import {getWeekDay, getWeekNumber} from "../utils/dateUtil";
 import * as React from "react";
 import styled from "styled-components";
 import * as PropTypes from "prop-types";
-
-const FlexContainer = styled.div`
-  display: flex;
-`;
-
-const FlexColumnContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const FlexGrowContainer = styled.div`
-  flex: 1;
-`;
+import {FlexColumnContainer, FlexContainer, FlexGrowContainer} from "../components/container/FlexContainers";
 
 const HeadingContainer = styled(FlexGrowContainer)`
   font-weight: 600;

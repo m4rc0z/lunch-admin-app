@@ -11,5 +11,11 @@ const getWeekDay = function(date) {
     return days[date.getDay()];
 };
 
+const createDate = function(germanDateString) {
+    const dayMonthYear = germanDateString.split('.');
+    return new Date(dayMonthYear[2], dayMonthYear[1]-1, dayMonthYear[0]);
+};
+
 exports.getWeekNumber = getWeekNumber;
 exports.getWeekDay = getWeekDay;
+exports.createDate = createDate;
