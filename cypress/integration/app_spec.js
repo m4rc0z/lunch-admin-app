@@ -1,5 +1,3 @@
-const menuResponse = require('../support/menus');
-
 describe('App', () => {
 
     function mockLogin(win) {
@@ -18,9 +16,9 @@ describe('App', () => {
             .get('[data-cy=responseText]')
             .invoke('text').should('contain', notLoggedInText)
             .get('[data-cy=loginBtn]')
-            .click()
+            .click({ force: true })
             .get('[data-cy=logoutBtn]')
-            .click()
+            .click({ force: true })
             .get('[data-cy=loginBtn]')
     });
 
@@ -52,11 +50,12 @@ describe('App', () => {
 
     it('should show requested menus if user is logged in', () => {
         cy.server();
-        cy.route({
-            method: 'GET',
-            url: '/api/menus',
-            response: menuResponse
-        });
+        cy.fixture('./getMenusFixture.json').as('getMenusFixture');
+        cy.route(
+            'GET',
+            'api/menus',
+            '@getMenusFixture',
+        ).as('getMenus');
         cy.visit('/home', {
             onBeforeLoad: (win) => {
                 win.fetch = null;
@@ -64,22 +63,22 @@ describe('App', () => {
 
             }
         })
-            .get('[data-cy=expansionPanelTitle1]')
+            .get('[data-cy=expansionPanelTitle14]')
             .click()
-            .get('[data-cy=week1MenuIndex1course1]')
+            .get('[data-cy=week14MenuIndex1course1]')
             .contains('Salat')
-            .get('[data-cy=week1MenuIndex1course2]')
+            .get('[data-cy=week14MenuIndex1course2]')
             .contains('Schnitzel')
-            .get('[data-cy=week1MenuIndex1course3]')
-            .contains('Eis')
-            .get('[data-cy=expansionPanelTitle2]')
+            .get('[data-cy=week14MenuIndex1course3]')
+            .contains('Apfelstrudel2')
+            .get('[data-cy=expansionPanelTitle15]')
             .click()
-            .get('[data-cy=week2MenuIndex1course1]')
-            .contains('Salat7')
-            .get('[data-cy=week2MenuIndex1course2]')
-            .contains('Schnitzel7')
-            .get('[data-cy=week2MenuIndex1course3]')
-            .contains('Eis7')
+            .get('[data-cy=week15MenuIndex0course1]')
+            .contains('TestSalat')
+            .get('[data-cy=week15MenuIndex0course2]')
+            .contains('TestSchnitzel3')
+            .get('[data-cy=week15MenuIndex0course3]')
+            .contains('Eis')
     });
 
     describe('Menu Import', () => {
@@ -168,6 +167,86 @@ describe('App', () => {
             cy.wait('@saveMenus');
 
             cy.contains('#client-snackbar', 'Fehler beim Speichern');
+        });
+
+
+        it('should call get menus when imported menus are saved', (done) => {
+            cy.visit('/home', {
+                onBeforeLoad: (win) => {
+                    mockLogin(win);
+                }
+            });
+
+            cy.fixture('./baseMenus.csv').as('menuFile')
+                .get('[data-cy=upload_file]').then(function (el) {
+                return Cypress.Blob.base64StringToBlob(btoa(this.menuFile), 'text/csv')
+                    .then(blob => {
+                        if (el != null) {
+                            cy.window().then((win) => {
+                                const testFile = new win.File([blob], 'test.csv', {type: "text/csv"});
+                                const dataTransfer = new DataTransfer();
+                                dataTransfer.items.add(testFile);
+                                el[0].files = dataTransfer.files;
+                                el[0].dispatchEvent(new Event('change', {bubbles: true}));
+                            })
+                        }
+                    })
+            });
+
+            cy.server();
+            cy.route({
+                method: 'PUT',
+                url: 'api/menus',
+                status: 200,
+                response: {},
+            }).as('saveMenus');
+
+            cy.route({
+                method: 'GET',
+                url: 'api/menus',
+                onResponse: () => {
+                    done();
+                },
+                response: {},
+            }).as('getMenus');
+
+            cy.get('[data-cy=menuOverview_save]').click();
+            cy.wait('@saveMenus');
+            cy.wait('@getMenus');
+
+            cy.contains('#client-snackbar', 'Menüs erfolgreich gespeichert');
+        });
+    });
+
+    describe('Menu deletion', () => {
+        it('should call get menus when imported menus are saved', (done) => {
+            cy.server();
+            cy.route({
+                method: 'DELETE',
+                url: 'api/menus',
+                status: 200,
+                response: {},
+            }).as('deleteMenus');
+
+            cy.fixture('./getMenusFixture.json').as('getMenusFixture');
+            cy.route(
+                'GET',
+                'api/menus',
+                '@getMenusFixture',
+            ).as('getMenus');
+
+            cy.visit('/home', {
+                onBeforeLoad: (win) => {
+                    mockLogin(win);
+                }
+            });
+
+            cy.get('[data-cy=expansionPanelTitle14]').click();
+            cy.get('[data-cy=delete_week_14]').click();
+            cy.contains('#client-snackbar', 'Menüs erfolgreich gelöscht');
+            cy.wait('@deleteMenus');
+
+            cy.wait('@getMenus').then(() => done());
         });
     });
 });

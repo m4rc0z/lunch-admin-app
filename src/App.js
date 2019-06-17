@@ -4,7 +4,6 @@ import HeaderComponent from "./components/Header";
 import ContentComponent from "./components/Content";
 import {setMenusAction} from "./menu/redux/menuActions";
 import {connect} from "react-redux";
-import * as PropTypes from "prop-types";
 import Notification from "./components/notification/Notification";
 
 function App(props) {
@@ -16,10 +15,6 @@ function App(props) {
             </div>
     );
 }
-
-App.propTypes = {
-    enqueueSnackbar: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => ({
     ...state

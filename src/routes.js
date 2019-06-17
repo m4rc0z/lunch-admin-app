@@ -7,7 +7,7 @@ import Callback from "./callback/Callback";
 import Home from "./Home/Home";
 import styled, {injectGlobal} from "styled-components";
 import NavBar from "./components/NavBar";
-import connect from "react-redux/es/connect/connect";
+import {connect} from "react-redux";
 import {getMenusAction, setMenusAction} from "./menu/redux/menuActions";
 import {showNotificationAction} from "./components/notification/redux/notificationActions";
 

@@ -3,6 +3,7 @@ import {createDate} from "./dateUtil";
 const convertImportedMenus = function(importedMenus) {
     return importedMenus.map(menu => (
         {
+            id: menu._id,
             date: createDate(menu.Datum),
             price: menu.Preis,
             courses: [

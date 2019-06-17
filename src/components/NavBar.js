@@ -7,6 +7,8 @@ import LogoutIcon from "@material-ui/icons/PowerSettingsNew";
 import * as PropTypes from "prop-types";
 import {REACT_APP_MOCK} from "../config";
 import SideNavigation from "./SideNavigation";
+import {setAuthTokenAction} from "../Auth/redux/authActions";
+import connect from "react-redux/es/connect/connect";
 
 const StyledNavBar = styled(AppBar)`
     top: 0;
@@ -36,7 +38,7 @@ class NavBar extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { scrolledDown: 'false' };
+        this.state = { scrolledDown: 'false', isAuthenticated: false, };
     }
 
     handleScroll() {
@@ -57,6 +59,7 @@ class NavBar extends Component {
         } else {
             this.props.auth.login();
         }
+        this.setState({ isAuthenticated: this.props.auth.isAuthenticated() })
     }
 
     mockLogin() {
@@ -70,6 +73,8 @@ class NavBar extends Component {
 
     logout() {
         this.props.auth.logout();
+        this.props.setAuthTokenAction(undefined);
+        this.setState({ isAuthenticated: this.props.auth.isAuthenticated() })
     }
 
     componentDidMount() {
@@ -78,11 +83,11 @@ class NavBar extends Component {
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
             renewSession();
+            this.props.setAuthTokenAction(this.props.auth.getAccessToken());
         }
     }
 
     render() {
-        const {isAuthenticated} = this.props.auth;
 
         return (
             <div>
@@ -93,7 +98,7 @@ class NavBar extends Component {
                             Lunch Restaurant App
                         </PageName>
                         {
-                            !isAuthenticated() && (
+                            !this.state.isAuthenticated && (
                                 <StyledIconButton
                                     onClick={this.login.bind(this)}
                                     data-cy="loginBtn"
@@ -103,7 +108,7 @@ class NavBar extends Component {
                             )
                         }
                         {
-                            isAuthenticated() && (
+                            this.state.isAuthenticated && (
                                 <StyledIconButton
                                     onClick={this.logout.bind(this)}
                                     data-cy="logoutBtn"
@@ -122,7 +127,17 @@ class NavBar extends Component {
 NavBar.propTypes = {
     auth: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    landingPage: PropTypes.string
+    landingPage: PropTypes.string,
+    setAuthTokenAction: PropTypes.func,
 };
 
-export default NavBar;
+const mapStateToProps = (state, ownProps) => ({
+    ...state,
+    ...ownProps
+});
+
+const mapDispatchToProps = dispatch => ({
+    setAuthTokenAction: (payload) => dispatch(setAuthTokenAction(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

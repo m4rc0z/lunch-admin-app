@@ -88,8 +88,9 @@ MenuImport.propTypes = {
 };
 
 
-const mapStateToProps = state => ({
-    ...state
+const mapStateToProps = (state, ownProps) => ({
+    ...state,
+    ...ownProps
 });
 
 const mapDispatchToProps = dispatch => ({

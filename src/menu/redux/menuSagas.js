@@ -1,4 +1,10 @@
 import {
+    deleteMenusAction,
+    deleteMenusActionType,
+    deleteMenusForWeekNumberActionType,
+    deleteMenusSuccessAction,
+    deleteMenusSuccessActionType,
+    getMenusAction,
     getMenusActionType,
     saveImportedMenusActionType,
     saveImportedMenusErrorAction,
@@ -8,10 +14,12 @@ import {
     setImportedMenusAction,
     setMenusAction,
     setShowImportMenuPanelAction,
+    showMenusNotDeletedErrorAction,
+    showMenusNotDeletedErrorActionType,
     showMenusNotFoundErrorAction,
     showMenusNotFoundErrorActionType
 } from "./menuActions";
-import {all, call, put, takeEvery} from 'redux-saga/effects'
+import {all, call, put, select, takeEvery} from 'redux-saga/effects'
 import {showNotificationAction} from "../../components/notification/redux/notificationActions";
 
 
@@ -66,6 +74,9 @@ export function* watchSaveImportedMenusSuccess() {
                 autoHideDuration: 3000,
             }
         }));
+        const authToken = yield select(getAuthToken);
+
+        yield put(getMenusAction(authToken));
     })
 }
 
@@ -103,6 +114,74 @@ export function* watchGetMenusError() {
     })
 }
 
+export const getMenus = (state) => state.menu.menus.menus;
+export const getRestaurantId = (state) => state.menu.menus._id;
+export const getAuthToken = (state) => state.auth.authToken;
+
+export function* watchDeleteMenusForWeekNumber() {
+    yield takeEvery(deleteMenusForWeekNumberActionType, function* () {
+        const menus = yield select(getMenus);
+        const restaurantId = yield select(getRestaurantId);
+        const authToken = yield select(getAuthToken);
+
+        yield put(deleteMenusAction(restaurantId, menus, authToken));
+    })
+}
+
+
+export function* watchDeleteMenus() {
+    yield takeEvery(deleteMenusActionType, function* (action) {
+        try {
+            const res = yield call(fetch, '/api/menus', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${action.authToken}`
+                },
+                body: JSON.stringify({
+                    restaurantId: action.restaurantId,
+                    menus: action.menus
+                })
+            });
+            if (res.status !== 200) {
+                yield put(showMenusNotDeletedErrorAction());
+            } else {
+                yield put(deleteMenusSuccessAction());
+            }
+        } catch (err) {
+            yield put(showMenusNotDeletedErrorAction())
+        }
+    });
+}
+
+export function* watchDeleteMenusError() {
+    yield takeEvery(showMenusNotDeletedErrorActionType, function* () {
+        yield put(showNotificationAction({
+            message: 'Fehler beim Löschen der Menüs',
+            options: {
+                variant: 'error',
+                autoHideDuration: 3000,
+            }
+        }));
+    })
+}
+
+export function* watchDeleteMenusSuccess() {
+    yield takeEvery(deleteMenusSuccessActionType, function* () {
+        yield put(showNotificationAction({
+            message: 'Menüs erfolgreich gelöscht',
+            options: {
+                variant: 'success',
+                autoHideDuration: 3000,
+            }
+        }));
+        const authToken = yield select(getAuthToken);
+
+        yield put(getMenusAction(authToken));
+    })
+}
+
 export default function* menuSaga() {
     yield all([
         watchGetMenus(),
@@ -110,5 +189,9 @@ export default function* menuSaga() {
         watchSaveImportedMenus(),
         watchSaveImportedMenusError(),
         watchSaveImportedMenusSuccess(),
+        watchDeleteMenusForWeekNumber(),
+        watchDeleteMenus(),
+        watchDeleteMenusError(),
+        watchDeleteMenusSuccess(),
     ])
 }

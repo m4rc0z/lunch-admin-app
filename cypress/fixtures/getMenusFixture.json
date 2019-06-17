@@ -1,0 +1,91 @@
+{
+  "_id": "5d0678a0b7449b7bf0d12455",
+  "RID": "auth0|5b007da4dc67155d2b5f5db0",
+  "__v": 0,
+  "menus": [
+    {
+      "courses": [
+        {
+          "_id": "5d067afcd168d0239dce9d76",
+          "course": 1,
+          "description": "Salat"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d75",
+          "course": 2,
+          "description": "Schnitzel"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d74",
+          "course": 3,
+          "description": "Apfelstrudel"
+        }
+      ],
+      "_id": "5d067afcd168d0239dce9d6b",
+      "date": "2019-03-31T22:00:00.000Z"
+    },
+    {
+      "courses": [
+        {
+          "_id": "5d067afcd168d0239dce9d73",
+          "course": 1,
+          "description": "Salat2"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d72",
+          "course": 2,
+          "description": "Schnitzel2"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d71",
+          "course": 3,
+          "description": "Apfelstrudel2"
+        }
+      ],
+      "_id": "5d067afcd168d0239dce9d6c",
+      "date": "2019-04-01T22:00:00.000Z"
+    },
+    {
+      "courses": [
+        {
+          "_id": "5d067afcd168d0239dce9d70",
+          "course": 1,
+          "description": "Salat3"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d6f",
+          "course": 2,
+          "description": "Schnitzel3"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d6e",
+          "course": 3,
+          "description": "Apfelstrudel3"
+        }
+      ],
+      "_id": "5d067afcd168d0239dce9d6d",
+      "date": "2019-04-02T22:00:00.000Z"
+    },
+    {
+      "courses": [
+        {
+          "_id": "5d067afcd168d0239dce9d70",
+          "course": 1,
+          "description": "TestSalat"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d6f",
+          "course": 2,
+          "description": "TestSchnitzel3"
+        },
+        {
+          "_id": "5d067afcd168d0239dce9d6e",
+          "course": 3,
+          "description": "Eis"
+        }
+      ],
+      "_id": "5d067afcd168d0239dce9d6d",
+      "date": "2019-04-08T22:00:00.000Z"
+    }
+  ]
+}

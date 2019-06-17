@@ -51,3 +51,31 @@ export const setShowImportMenuPanelAction = (payload) => ({
     type: setShowImportMenuPanelActionType,
     payload: payload
 });
+
+export const deleteMenusForWeekNumberActionType = '[MENUS] delete weeknumber menus';
+
+export const deleteMenusForWeekNumberAction = (weekNumber) => ({
+    type: deleteMenusForWeekNumberActionType,
+    weekNumber,
+});
+
+export const deleteMenusActionType = '[MENUS] delete menus';
+
+export const deleteMenusAction = (restaurantId, menus, authToken) => ({
+    type: deleteMenusActionType,
+    menus,
+    restaurantId,
+    authToken
+});
+
+export const showMenusNotDeletedErrorActionType = '[MENUS] not deleted menus';
+
+export const showMenusNotDeletedErrorAction = () => ({
+    type: showMenusNotDeletedErrorActionType
+});
+
+export const deleteMenusSuccessActionType = '[MENUS] menus deleted success';
+
+export const deleteMenusSuccessAction = () => ({
+    type: deleteMenusSuccessActionType
+});
