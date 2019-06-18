@@ -30,5 +30,4 @@ describe('menuUtil', function () {
             expect(convertImportedMenus(importedMenu)).to.eql(convertedMenu);
         })
     });
-
 });

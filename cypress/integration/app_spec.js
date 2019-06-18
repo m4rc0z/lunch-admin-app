@@ -1,5 +1,4 @@
 describe('App', () => {
-
     function mockLogin(win) {
         win.fetch = null;
         win.localStorage.setItem('expires_at', JSON.stringify((5000) + new Date().getTime()));
@@ -55,7 +54,7 @@ describe('App', () => {
             'GET',
             'api/menus',
             '@getMenusFixture',
-        ).as('getMenus');
+        ).as('getMenusForWeek');
         cy.visit('/home', {
             onBeforeLoad: (win) => {
                 win.fetch = null;
@@ -208,11 +207,11 @@ describe('App', () => {
                     done();
                 },
                 response: {},
-            }).as('getMenus');
+            }).as('getMenusForWeek');
 
             cy.get('[data-cy=menuOverview_save]').click();
             cy.wait('@saveMenus');
-            cy.wait('@getMenus');
+            cy.wait('@getMenusForWeek');
 
             cy.contains('#client-snackbar', 'Menüs erfolgreich gespeichert');
         });
@@ -220,12 +219,17 @@ describe('App', () => {
 
     describe('Menu deletion', () => {
         it('should call get menus when imported menus are saved', (done) => {
+            const menusToDelete = require('../fixtures/menusToDelete');
+
             cy.server();
             cy.route({
                 method: 'DELETE',
                 url: 'api/menus',
                 status: 200,
                 response: {},
+                onRequest(...args) {
+                    expect(JSON.stringify(args[0].request.body.menus)).to.be.equal(JSON.stringify(menusToDelete));
+                }
             }).as('deleteMenus');
 
             cy.fixture('./getMenusFixture.json').as('getMenusFixture');
@@ -233,7 +237,7 @@ describe('App', () => {
                 'GET',
                 'api/menus',
                 '@getMenusFixture',
-            ).as('getMenus');
+            ).as('getMenusForWeek');
 
             cy.visit('/home', {
                 onBeforeLoad: (win) => {
@@ -246,7 +250,7 @@ describe('App', () => {
             cy.contains('#client-snackbar', 'Menüs erfolgreich gelöscht');
             cy.wait('@deleteMenus');
 
-            cy.wait('@getMenus').then(() => done());
+            cy.wait('@getMenusForWeek').then(() => done());
         });
     });
 });

@@ -1,19 +1,14 @@
-import {getWeekDay, getWeekNumber} from "../utils/dateUtil";
+import {getWeekDay} from "../utils/dateUtil";
 import * as React from "react";
 import styled from "styled-components";
 import * as PropTypes from "prop-types";
 import {FlexColumnContainer, FlexContainer, FlexGrowContainer} from "../components/container/FlexContainers";
+import {getFilteredMenusByWeek} from "../utils/menuUtil";
 
 const HeadingContainer = styled(FlexGrowContainer)`
   font-weight: 600;
   padding-bottom: 20px;
 `;
-
-const getFilteredMenusByWeek = (weekNumber, menus) => {
-    return menus && menus.menus.filter(menu => {
-        return getWeekNumber(new Date(menu.date)) === weekNumber;
-    });
-};
 
 const MenuList = (props) => {
     return (

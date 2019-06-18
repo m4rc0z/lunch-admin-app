@@ -1,4 +1,4 @@
-import {createDate} from "./dateUtil";
+import {createDate, getWeekNumber} from "./dateUtil";
 
 const convertImportedMenus = function(importedMenus) {
     return importedMenus.map(menu => (
@@ -15,4 +15,10 @@ const convertImportedMenus = function(importedMenus) {
     ));
 };
 
-export {convertImportedMenus}
+const getFilteredMenusByWeek = (weekNumber, menus) => {
+    return menus && menus.menus.filter(menu => {
+        return getWeekNumber(new Date(menu.date)) === weekNumber;
+    });
+};
+
+export {convertImportedMenus, getFilteredMenusByWeek}

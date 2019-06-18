@@ -21,6 +21,7 @@ import {
 } from "./menuActions";
 import {all, call, put, select, takeEvery} from 'redux-saga/effects'
 import {showNotificationAction} from "../../components/notification/redux/notificationActions";
+import {getFilteredMenusByWeek} from "../../utils/menuUtil";
 
 
 export function* watchSaveImportedMenus() {
@@ -114,17 +115,18 @@ export function* watchGetMenusError() {
     })
 }
 
-export const getMenus = (state) => state.menu.menus.menus;
+export const getMenus = (state) => state.menu.menus;
 export const getRestaurantId = (state) => state.menu.menus._id;
 export const getAuthToken = (state) => state.auth.authToken;
 
 export function* watchDeleteMenusForWeekNumber() {
-    yield takeEvery(deleteMenusForWeekNumberActionType, function* () {
+    yield takeEvery(deleteMenusForWeekNumberActionType, function* (action) {
         const menus = yield select(getMenus);
+        const menusForWeek = getFilteredMenusByWeek(action.weekNumber, menus);
         const restaurantId = yield select(getRestaurantId);
         const authToken = yield select(getAuthToken);
 
-        yield put(deleteMenusAction(restaurantId, menus, authToken));
+        yield put(deleteMenusAction(restaurantId, menusForWeek, authToken));
     })
 }
 
