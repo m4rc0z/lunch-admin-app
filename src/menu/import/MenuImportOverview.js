@@ -12,11 +12,14 @@ const FlexColumnContainer = styled.div`
   flex: 1;
   flex-direction: column;
 `;
+const StyledOverviewContainer = styled.div`
+  padding: 10px 0;
+`;
 
 function MenuImportOverview(props) {
     // TODO: rename Gang1 to course1
     return (
-        <div>
+        <StyledOverviewContainer>
             <ExpansionPanel defaultExpanded>
                 <ExpansionPanelDetails>
                     {props.menus && props.menus.map((menu, i) => {
@@ -38,7 +41,7 @@ function MenuImportOverview(props) {
                     </Button>
                 </ExpansionPanelActions>
             </ExpansionPanel>
-        </div>
+        </StyledOverviewContainer>
     );
 }
 

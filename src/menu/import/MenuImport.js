@@ -17,6 +17,19 @@ const ClickableLabel = styled.label`
   cursor: pointer;
 `;
 
+const StyledImportButton = styled(Button)`
+  width: 100%;
+  && {
+    background-color: white;
+  }
+`;
+
+const StyledImportButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 function MenuImport(props) {
     const [, setCsvFile] = React.useState(undefined);
     const [importedMenus, setImportedMenus] = React.useState(undefined);
@@ -52,17 +65,19 @@ function MenuImport(props) {
 
     return (
         <div>
-            <Button variant="contained" color="default">
-                <ClickableLabel>
-                    Select File
-                    <InvisibleFileInput
-                        data-cy={`upload_file`}
-                        type="file"
-                        onChange={(event) => handleChange(event)}
-                    />
+            <StyledImportButton>
+                <StyledImportButtonContainer>
+                    <ClickableLabel>
+                        Select File
+                        <InvisibleFileInput
+                            data-cy={`upload_file`}
+                            type="file"
+                            onChange={(event) => handleChange(event)}
+                        />
+                    </ClickableLabel>
                     <CloudUploadIcon/>
-                </ClickableLabel>
-            </Button>
+                </StyledImportButtonContainer>
+            </StyledImportButton>
             {props.menu.showMenuImportPanel
                 ?
                 <MenuImportOverview
