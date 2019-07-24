@@ -23,6 +23,7 @@ import {
 } from "./restaurantActions";
 import {getFilteredMenusByWeek} from "../../utils/menuUtil";
 import {setShowImportMenuPanelAction} from "../../menu/redux/menuActions";
+import 'whatwg-fetch';
 
 export const getAuthToken = (state) => state.auth.authToken;
 

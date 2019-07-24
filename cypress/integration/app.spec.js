@@ -1,6 +1,9 @@
 describe('App', () => {
-    function mockLogin(win) {
+    Cypress.on("window:before:load", win => {
         win.fetch = null;
+    });
+
+    function mockLogin(win) {
         win.localStorage.setItem('expires_at', JSON.stringify((5000) + new Date().getTime()));
         win.localStorage.setItem('isAdmin', JSON.stringify(false));
         win.localStorage.setItem('isLoggedIn', JSON.stringify(true));
@@ -8,7 +11,6 @@ describe('App', () => {
     }
 
     function mockAdminLogin(win) {
-        win.fetch = null;
         win.localStorage.setItem('expires_at', JSON.stringify((5000) + new Date().getTime()));
         win.localStorage.setItem('isAdmin', JSON.stringify(true));
         win.localStorage.setItem('isLoggedIn', JSON.stringify(true));
