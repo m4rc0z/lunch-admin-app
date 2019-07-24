@@ -1,11 +1,11 @@
 import React from 'react';
 import {Redirect, Route, Router, Switch} from 'react-router-dom';
-import App from './App';
+import LandingComponent from './landing/LandingComponent';
 import Auth from './Auth/Auth';
 import history from './history';
 import Callback from "./callback/Callback";
 import styled, {injectGlobal} from "styled-components";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/navigation/NavBar";
 import {connect} from "react-redux";
 import {showNotificationAction} from "./components/notification/redux/notificationActions";
 import Restaurant from "./restaurant/Restaurant";
@@ -93,7 +93,9 @@ function MainRoutes() {
                                 :
                                 <StyledRouteContainer>
                                     <NavBar auth={auth} history={history} landingPage={"true"}/>
-                                    <StyledRouteContainer><App/></StyledRouteContainer>
+                                    <StyledRouteContainer>
+                                        <LandingComponent/>
+                                    </StyledRouteContainer>
                                 </StyledRouteContainer>
                         );
                     }}/>

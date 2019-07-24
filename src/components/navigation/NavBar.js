@@ -5,9 +5,9 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import LoginIcon from "@material-ui/icons/ExitToApp";
 import LogoutIcon from "@material-ui/icons/PowerSettingsNew";
 import * as PropTypes from "prop-types";
-import {REACT_APP_MOCK} from "../config";
+import {REACT_APP_MOCK} from "../../config";
 import SideNavigation from "./SideNavigation";
-import {setAuthTokenAction, setIsAdminAction} from "../Auth/redux/authActions";
+import {setAuthTokenAction, setIsAdminAction} from "../../Auth/redux/authActions";
 import connect from "react-redux/es/connect/connect";
 
 const StyledNavBar = styled(AppBar)`

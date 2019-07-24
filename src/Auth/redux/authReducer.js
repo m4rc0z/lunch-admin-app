@@ -1,4 +1,4 @@
-import {setAuthRestaurantIdActionType, setAuthTokenActionType, setIsAdminActionType} from "./authActions";
+import {setAuthTokenActionType, setIsAdminActionType} from "./authActions";
 
 const defaultState = {
     authToken: undefined,

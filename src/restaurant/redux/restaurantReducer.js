@@ -1,9 +1,4 @@
-import {
-    setRestaurantActionType,
-    setRestaurantMenusAction,
-    setRestaurantMenusActionType,
-    setRestaurantsActionType
-} from "./restaurantActions";
+import {setRestaurantActionType, setRestaurantsActionType} from "./restaurantActions";
 
 export default (state = {}, action) => {
     switch (action.type) {
