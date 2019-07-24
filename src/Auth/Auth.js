@@ -1,6 +1,7 @@
 import history from '../history';
 import auth0 from 'auth0-js';
 import {AUTH_CONFIG} from "./auth0-variables";
+import {REACT_APP_MOCK} from "../config";
 
 export default class Auth {
     auth0 = new auth0.WebAuth({
@@ -26,12 +27,12 @@ export default class Auth {
     }
 
     handleAuthentication() {
+        const that = this;
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
-                this.setSession(authResult);
-                history.replace('/home');
+                that.getProfile(authResult);
             } else if (err) {
-                history.replace('/home');
+                history.replace('/');
                 console.log(err);
                 alert(`Error: ${err.error}. Check the console for further details.`);
             }
@@ -42,14 +43,47 @@ export default class Auth {
         return localStorage.getItem('access_token');
     }
 
-    setSession(authResult) {
+    getIsAdmin() {
+        return Boolean(JSON.parse(localStorage.getItem('isAdmin'))) || false;
+    }
+
+    getUserId() {
+        return localStorage.getItem('userId');
+    }
+
+    getProfile(authResult) {
+        this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+            if (profile) {
+                this.setSession(authResult, profile);
+            } else if (err) {
+                console.warn(`Error retrieving profile ${err.error}`);
+            }
+        });
+    }
+
+    checkIsAdmin(profile) {
+        const roles = profile['https://example.com/roles'] || [];
+        return roles.indexOf('admin') > -1;
+    }
+
+    setSession(authResult, profile) {
+        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+        const userId = authResult.idTokenPayload.sub;
         localStorage.setItem('isLoggedIn', 'true');
-        let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
-        // navigate to the home route
-        history.replace('/home');
+        localStorage.setItem('userId', userId);
+        let isAdmin;
+        if (profile) {
+            isAdmin = this.checkIsAdmin(profile);
+            localStorage.setItem('isAdmin', isAdmin);
+        }
+        if (isAdmin) {
+            history.push('/restaurants');
+        } else {
+            history.push(`/restaurants/${userId}`);
+        }
     }
 
     renewSession() {
@@ -57,9 +91,12 @@ export default class Auth {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
             } else if (err) {
-                this.logout();
-                console.log(err);
-                alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+                if (!REACT_APP_MOCK) {
+                    this.logout();
+                    console.log(err);
+                    // TODO: adapt for real popup message
+                    alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+                }
             }
         });
     }
@@ -71,9 +108,11 @@ export default class Auth {
         localStorage.removeItem('expires_at');
         // Remove isLoggedIn flag from localStorage
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('userId');
 
         // navigate to the home route
-        history.replace('/home');
+        history.replace('/');
     }
 
     isAuthenticated() {

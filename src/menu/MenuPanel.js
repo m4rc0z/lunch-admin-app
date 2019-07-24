@@ -3,76 +3,86 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/Expan
 import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DeleteIcon from '@material-ui/icons/Delete';
 import * as React from "react";
-import {useEffect} from "react";
-import styled from "styled-components";
-import {getWeekNumber} from "../dateUtil";
+import {getWeekNumber} from "../utils/dateUtil";
 import MenuList from "./MenuList";
 import * as PropTypes from "prop-types";
+import {FlexColumnContainer} from "../components/container/FlexContainers";
+import {connect} from "react-redux";
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import styled from "styled-components";
+import {StyledPaddingContainer} from "../common_styles";
 
-const FlexColumnContainer = styled.div`
+const StyledButtonContainer = styled.div`
   display: flex;
-  flex: 1;
-  flex-direction: column;
+  justify-content: flex-end;
 `;
 
 function MenuPanel(props) {
     const [expanded, setExpanded] = React.useState(null);
-    const [menus, setMenus] = React.useState(null);
 
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const areMenusAvailable = (weekNumber, menus) => {
-        return menus && menus.menus.some(menu => {
+    const areMenusAvailable = (weekNumber) => {
+        return props && props.menus && props.menus.some(menu => {
             return getWeekNumber(new Date(menu.date)) === weekNumber;
         });
     };
 
-    useEffect(() => {
-        fetch('/api/menus', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${props.auth.getAccessToken()}`
-            }
-        })
-            .then(response => response.json())
-            .then(responseJson => {
-                setMenus(responseJson);
-            })
-    }, []);
-
     return (
-        <div>
+        <StyledPaddingContainer>
             {
-                Array(5)
+                Array(50)
                     .fill(getWeekNumber(new Date()))
                     .map((e, i) => i + 1)
-                    .filter(weekNumber => areMenusAvailable(weekNumber, menus))
+                    .filter(weekNumber => areMenusAvailable(weekNumber))
                     .map((weekNumber, i) => {
                         return (
-                            <ExpansionPanel key={i} expanded={expanded === `panel${weekNumber}`} onChange={handleChange(`panel${weekNumber}`)}>
-                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                                    <Typography data-cy={`expansionPanelTitle${weekNumber}`}>KW {weekNumber}</Typography>
-                                </ExpansionPanelSummary>
-                                <ExpansionPanelDetails>
-                                    <FlexColumnContainer>
-                                        <MenuList weekNumber={weekNumber} menus={menus}/>
-                                    </FlexColumnContainer>
-                                </ExpansionPanelDetails>
-                            </ExpansionPanel>
+                            <StyledPaddingContainer key={i}>
+                                <ExpansionPanel
+                                    expanded={expanded === `panel${weekNumber}`}
+                                    onChange={handleChange(`panel${weekNumber}`)}
+                                >
+                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+                                        <Typography data-cy={`expansionPanelTitle${weekNumber}`}>
+                                            KW {weekNumber}
+                                        </Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
+                                        <FlexColumnContainer>
+                                            <MenuList weekNumber={weekNumber} menus={props.menus}/>
+                                            <StyledButtonContainer>
+                                                <IconButton
+                                                    onClick={() => props.deleteMenus(weekNumber)}
+                                                    data-cy={`delete_week_${weekNumber}`}
+                                                >
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                            </StyledButtonContainer>
+                                        </FlexColumnContainer>
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
+                            </StyledPaddingContainer>
                         );
                     })
             }
-        </div>
+        </StyledPaddingContainer>
     );
 }
 
-export default MenuPanel;
-
 MenuPanel.propTypes = {
-    auth: PropTypes.object.isRequired,
+    menus: PropTypes.array,
+    deleteMenus: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state, ownProps) => {
+    return ({
+        ...state,
+        ...ownProps
+    });
+};
+
+export default connect(mapStateToProps, undefined)(MenuPanel);

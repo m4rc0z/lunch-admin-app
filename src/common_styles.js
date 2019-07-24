@@ -1,4 +1,4 @@
-import {injectGlobal} from "styled-components";
+import styled, {injectGlobal} from "styled-components";
 
 export const globalStyle = injectGlobal`
   html, body {
@@ -9,4 +9,8 @@ export const globalStyle = injectGlobal`
     height: 100%;
     width: 100%;
   }
+`;
+
+export const StyledPaddingContainer = styled.div`
+  padding: 10px 0;
 `;

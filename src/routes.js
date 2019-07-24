@@ -1,12 +1,16 @@
 import React from 'react';
-import {Route, Router, Switch} from 'react-router-dom';
-import App from './App';
+import {Redirect, Route, Router, Switch} from 'react-router-dom';
+import LandingComponent from './landing/LandingComponent';
 import Auth from './Auth/Auth';
 import history from './history';
 import Callback from "./callback/Callback";
-import Home from "./Home/Home";
 import styled, {injectGlobal} from "styled-components";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/navigation/NavBar";
+import {connect} from "react-redux";
+import {showNotificationAction} from "./components/notification/redux/notificationActions";
+import Restaurant from "./restaurant/Restaurant";
+import RestaurantMenus from "./menu/RestaurantMenus";
+import * as PropTypes from "prop-types";
 
 const StyledRouteContainer = styled.div`
   height: 100%;
@@ -40,24 +44,36 @@ const handleAuthentication = ({location}) => {
     }
 };
 
-export const makeMainRoutes = () => {
+function MainRoutes() {
     return (
         <Router history={history}>
             <StyledMainRouteContainer>
                 <Switch>
-                    <Route exact={true} path="/" render={() => {
-                            return (
-                                <StyledRouteContainer>
-                                    <NavBar auth={auth} history={history} landingPage={"true"}/>
-                                    <StyledRouteContainer><App/></StyledRouteContainer>
-                                </StyledRouteContainer>
-                            );
-                    }}/>
-                    <Route path="/home" render={(props) => {
+                    <Route exact path="/restaurants" render={(props) => {
                         return (
-                            <StyledRouteContainer>
+                            auth.getIsAdmin()
+                                ?
+                                <StyledRouteContainer>
+                                    <NavBar auth={auth} history={history} landingPage={"false"}/>
+                                    <StyledRouteContainer>
+                                        <Restaurant auth={auth} {...props}/>
+                                    </StyledRouteContainer>
+                                </StyledRouteContainer>
+                                :
+                                <Redirect to={`/restaurants/${auth.getUserId()}`}/>
+                        );
+                    }}/>
+                    <Route exact path="/restaurants/:id" render={(props) => {
+                        return (<StyledRouteContainer>
                                 <NavBar auth={auth} history={history} landingPage={"false"}/>
-                                <StyledRouteContainer><Home auth={auth} {...props} /></StyledRouteContainer>
+                                <StyledRouteContainer>
+                                    {
+                                        props.match.params.id === auth.getUserId() || auth.getIsAdmin()
+                                            ? <RestaurantMenus auth={auth} {...props}
+                                                               restaurantId={props.match.params.id}/>
+                                            : undefined
+                                    }
+                                </StyledRouteContainer>
                             </StyledRouteContainer>
                         );
                     }}/>
@@ -65,8 +81,42 @@ export const makeMainRoutes = () => {
                         handleAuthentication(props);
                         return <Callback {...props} />;
                     }}/>
+                    <Route render={() => {
+                        return (
+                            auth.isAuthenticated()
+                                ?
+                                auth.getIsAdmin()
+                                    ?
+                                    <Redirect to={`/restaurants`}/>
+                                    :
+                                    <Redirect to={`/restaurants/${auth.getUserId()}`}/>
+                                :
+                                <StyledRouteContainer>
+                                    <NavBar auth={auth} history={history} landingPage={"true"}/>
+                                    <StyledRouteContainer>
+                                        <LandingComponent/>
+                                    </StyledRouteContainer>
+                                </StyledRouteContainer>
+                        );
+                    }}/>
                 </Switch>
             </StyledMainRouteContainer>
         </Router>
     );
+}
+
+MainRoutes.propTypes = {
+    match: PropTypes.object,
 };
+
+const mapStateToProps = (state, ownProps) => ({
+    ...state,
+    ...ownProps
+});
+
+const mapDispatchToProps = dispatch => ({
+    showNotificationAction: (payload) => dispatch(showNotificationAction(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainRoutes);
+

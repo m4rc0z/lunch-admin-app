@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-import {getWeekDay, getWeekNumber} from "./dateUtil";
+import {createDate, getWeekDay, getWeekNumber} from "./dateUtil";
 
 describe('dateUtil', function() {
     describe('getWeekNumber', function() {
@@ -19,7 +19,7 @@ describe('dateUtil', function() {
     });
 
     describe('getWeekDay', function() {
-        it.only('should return correct WeekDay', function() {
+        it('should return correct WeekDay', function() {
             const expected = [
                 { date: new Date(2019, 0, 1), day: 'Dienstag' },
                 { date: new Date(2019, 0, 12), day: 'Samstag' },
@@ -29,6 +29,21 @@ describe('dateUtil', function() {
 
             expected.forEach(obj => {
                 expect(getWeekDay(obj.date)).to.equal(obj.day);
+            })
+        })
+    });
+
+    describe('createDate', function() {
+        it('should return correct Date', function() {
+            const expected = [
+                { dateString: '12.02.1991', date: new Date(1991, 1, 12) },
+                { dateString: '12.03.1991', date: new Date(1991, 2, 12) },
+                { dateString: '12.03.1992', date: new Date(1992, 2, 12) },
+                { dateString: '13.03.1992', date: new Date(1992, 2, 13) },
+            ];
+
+            expected.forEach(obj => {
+                expect(createDate(obj.dateString)).to.eql(obj.date);
             })
         })
     })
