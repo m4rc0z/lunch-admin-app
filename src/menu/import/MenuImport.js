@@ -6,8 +6,9 @@ import Papa from "papaparse";
 import MenuImportOverview from "./MenuImportOverview";
 import * as PropTypes from "prop-types";
 import {convertImportedMenus} from "../../utils/menuUtil";
-import {saveImportedMenusAction, setMenusAction, setShowImportMenuPanelAction} from "../redux/menuActions";
+import {setShowImportMenuPanelAction} from "../redux/menuActions";
 import connect from "react-redux/es/connect/connect";
+import {updateRestaurantMenusAction} from "../../restaurant/redux/restaurantActions";
 
 const InvisibleFileInput = styled.input`
   display: none;
@@ -60,9 +61,8 @@ function MenuImport(props) {
     const saveMenus = () => {
         setCsvFile(undefined);
         const convertedMenus = convertImportedMenus(importedMenus);
-        props.saveImportedMenusAction(props.auth.getAccessToken(), convertedMenus);
+        props.updateRestaurantMenusAction(convertedMenus, props.restaurantId);
     };
-
     return (
         <div>
             <StyledImportButton>
@@ -98,8 +98,9 @@ function MenuImport(props) {
 MenuImport.propTypes = {
     auth: PropTypes.object.isRequired,
     setShowImportMenuPanelAction: PropTypes.func,
-    saveImportedMenusAction: PropTypes.func,
-    menu: PropTypes.object
+    updateRestaurantMenusAction: PropTypes.func,
+    menu: PropTypes.object,
+    restaurantId: PropTypes.string.isRequired,
 };
 
 
@@ -109,9 +110,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setMenusAction: (payload) => dispatch(setMenusAction(payload)),
     setShowImportMenuPanelAction: (payload) => dispatch(setShowImportMenuPanelAction(payload)),
-    saveImportedMenusAction: (authToken, convertedMenus) => dispatch(saveImportedMenusAction(authToken, convertedMenus)),
+    updateRestaurantMenusAction: (convertedMenus, restaurantId) => dispatch(updateRestaurantMenusAction(convertedMenus, restaurantId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuImport);

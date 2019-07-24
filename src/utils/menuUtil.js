@@ -16,7 +16,7 @@ const convertImportedMenus = function(importedMenus) {
 };
 
 const getFilteredMenusByWeek = (weekNumber, menus) => {
-    return menus && menus.menus.filter(menu => {
+    return menus && menus.filter(menu => {
         return getWeekNumber(new Date(menu.date)) === weekNumber;
     });
 };

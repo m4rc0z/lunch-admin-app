@@ -4,6 +4,7 @@ import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer/SwipeableDrawer";
+import RestaurantIcon from '@material-ui/icons/Restaurant';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from "@material-ui/icons/Menu";
 import styled from "styled-components";
@@ -28,19 +29,29 @@ function SideNavigation(props) {
     const sideList = (
         <div>
             <List>
-                {['Home'].map((text) => (
                     <ListItem
                         button
-                        key={text}
-                        onClick={props.clickHome}
+                        key={'Home'}
+                        onClick={() => props.click('home')}
                         data-cy="homeBtn"
                     >
                         <ListItemIcon>
                             <HomeIcon/>
                         </ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemText primary={'Home'} />
                     </ListItem>
-                ))}
+                {props.isAdmin && <ListItem
+                    button
+                    key={'Restaurant'}
+                    onClick={() => props.click('restaurants')}
+                    data-cy="restaurantBtn"
+                >
+                    <ListItemIcon>
+                        <RestaurantIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Restaurants'}/>
+                </ListItem>
+                }
             </List>
         </div>
     );
@@ -73,7 +84,8 @@ function SideNavigation(props) {
 }
 
 SideNavigation.propTypes = {
-    clickHome: PropTypes.func.isRequired,
+    click: PropTypes.func.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
 };
 
 export default SideNavigation;

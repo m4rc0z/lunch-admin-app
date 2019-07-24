@@ -7,7 +7,7 @@ import LogoutIcon from "@material-ui/icons/PowerSettingsNew";
 import * as PropTypes from "prop-types";
 import {REACT_APP_MOCK} from "../config";
 import SideNavigation from "./SideNavigation";
-import {setAuthTokenAction} from "../Auth/redux/authActions";
+import {setAuthTokenAction, setIsAdminAction} from "../Auth/redux/authActions";
 import connect from "react-redux/es/connect/connect";
 
 const StyledNavBar = styled(AppBar)`
@@ -50,7 +50,7 @@ class NavBar extends Component {
     }
 
     goTo(route) {
-        this.props.history.replace(`/${route}`)
+        this.props.history.push(`/${route}`)
     }
 
     login() {
@@ -67,6 +67,9 @@ class NavBar extends Component {
             expiresIn: 10000,
             accessToken: 'dummyToken',
             idToken: 'dummyIdToken',
+            idTokenPayload: {
+                sub: 'testSub'
+            }
         };
         this.props.auth.setSession(mockAuthResult);
     }
@@ -84,6 +87,7 @@ class NavBar extends Component {
         if (localStorage.getItem('isLoggedIn') === 'true') {
             renewSession();
             this.props.setAuthTokenAction(this.props.auth.getAccessToken());
+            this.props.setIsAdminAction(this.props.auth.getIsAdmin());
         }
     }
 
@@ -93,14 +97,14 @@ class NavBar extends Component {
             <div>
                 <StyledNavBar scrolleddown={this.state.scrolledDown} landingpage={this.props.landingPage}>
                     <Toolbar>
-                        <SideNavigation clickHome={() => this.goTo( 'home')}/>
+                        <SideNavigation isAdmin={this.props.isAdmin} click={(route) => this.goTo(route)}/>
                         <PageName>
                             Lunch Restaurant App
                         </PageName>
                         {
-                            !this.state.isAuthenticated && (
+                            !this.props.auth.isAuthenticated() && (
                                 <StyledIconButton
-                                    onClick={this.login.bind(this)}
+                                    onClick={() => this.login()}
                                     data-cy="loginBtn"
                                 >
                                     <LoginIcon/>
@@ -108,9 +112,9 @@ class NavBar extends Component {
                             )
                         }
                         {
-                            this.state.isAuthenticated && (
+                            this.props.auth.isAuthenticated() && (
                                 <StyledIconButton
-                                    onClick={this.logout.bind(this)}
+                                    onClick={() => this.logout()}
                                     data-cy="logoutBtn"
                                 >
                                     <LogoutIcon/>
@@ -129,15 +133,20 @@ NavBar.propTypes = {
     history: PropTypes.object.isRequired,
     landingPage: PropTypes.string,
     setAuthTokenAction: PropTypes.func,
+    setIsAdminAction: PropTypes.func,
+    isAdmin: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    ...state,
-    ...ownProps
-});
+const mapStateToProps = (state, ownProps) => {
+    return ({
+        isAdmin: state.auth.isAdmin,
+        ...ownProps
+    });
+};
 
 const mapDispatchToProps = dispatch => ({
     setAuthTokenAction: (payload) => dispatch(setAuthTokenAction(payload)),
+    setIsAdminAction: (isAdmin) => dispatch(setIsAdminAction(isAdmin)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

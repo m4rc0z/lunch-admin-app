@@ -6,20 +6,17 @@ import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/Expan
 import Button from "@material-ui/core/Button/Button";
 import * as PropTypes from "prop-types";
 import styled from "styled-components";
+import {StyledPaddingContainer} from "../../common_styles";
 
 const FlexColumnContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
 `;
-const StyledOverviewContainer = styled.div`
-  padding: 10px 0;
-`;
-
 function MenuImportOverview(props) {
     // TODO: rename Gang1 to course1
     return (
-        <StyledOverviewContainer>
+        <StyledPaddingContainer data-cy={'menuImportPanel'}>
             <ExpansionPanel defaultExpanded>
                 <ExpansionPanelDetails>
                     {props.menus && props.menus.map((menu, i) => {
@@ -41,7 +38,7 @@ function MenuImportOverview(props) {
                     </Button>
                 </ExpansionPanelActions>
             </ExpansionPanel>
-        </StyledOverviewContainer>
+        </StyledPaddingContainer>
     );
 }
 

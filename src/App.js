@@ -2,25 +2,18 @@ import React from 'react';
 import './App.css';
 import HeaderComponent from "./components/Header";
 import ContentComponent from "./components/Content";
-import {setMenusAction} from "./menu/redux/menuActions";
-import {connect} from "react-redux";
 import Notification from "./components/notification/Notification";
 
-function App(props) {
+function App() {
+    // TODO: rename App component and check usages
+    // TODO: check if contentcomponent and nitification are needed
     return (
             <div>
-                <HeaderComponent {...props}/>
+                <HeaderComponent/>
                 <ContentComponent/>
                 <Notification/>
             </div>
     );
 }
 
-const mapStateToProps = state => ({
-    ...state
-});
-const mapDispatchToProps = dispatch => ({
-    setMenusAction: (payload) => dispatch(setMenusAction(payload)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

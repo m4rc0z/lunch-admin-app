@@ -2,27 +2,6 @@
   {
     "courses": [
       {
-        "_id": "5d067afcd168d0239dce9d76",
-        "course": 1,
-        "description": "Salat"
-      },
-      {
-        "_id": "5d067afcd168d0239dce9d75",
-        "course": 2,
-        "description": "Schnitzel"
-      },
-      {
-        "_id": "5d067afcd168d0239dce9d74",
-        "course": 3,
-        "description": "Apfelstrudel"
-      }
-    ],
-    "_id": "5d067afcd168d0239dce9d6b",
-    "date": "2019-03-31T22:00:00.000Z"
-  },
-  {
-    "courses": [
-      {
         "_id": "5d067afcd168d0239dce9d73",
         "course": 1,
         "description": "Salat2"
@@ -39,7 +18,7 @@
       }
     ],
     "_id": "5d067afcd168d0239dce9d6c",
-    "date": "2019-04-01T22:00:00.000Z"
+    "date": "2019-08-01T22:00:00.000Z"
   },
   {
     "courses": [
@@ -60,6 +39,6 @@
       }
     ],
     "_id": "5d067afcd168d0239dce9d6d",
-    "date": "2019-04-02T22:00:00.000Z"
+    "date": "2019-08-02T22:00:00.000Z"
   }
 ]

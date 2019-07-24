@@ -22,11 +22,11 @@ const MenuList = (props) => {
             {
                 props.menus && getFilteredMenusByWeek(props.weekNumber, props.menus).map((menu, i) => {
                     return (
-                        <FlexContainer key={i}>
+                        menu.courses && menu.courses.length > 0 && <FlexContainer key={i}>
                             <FlexGrowContainer>{getWeekDay(new Date(menu.date))}</FlexGrowContainer>
-                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course1`}>{menu.courses[0].description}</FlexGrowContainer>
-                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course2`}>{menu.courses[1].description}</FlexGrowContainer>
-                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course3`}>{menu.courses[2].description}</FlexGrowContainer>
+                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course1`}>{menu.courses[0] && menu.courses[0].description}</FlexGrowContainer>
+                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course2`}>{menu.courses[1] && menu.courses[1].description}</FlexGrowContainer>
+                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course3`}>{menu.courses[2] && menu.courses[2].description}</FlexGrowContainer>
                         </FlexContainer>
                     );
                 })
@@ -39,5 +39,5 @@ export default MenuList;
 
 MenuList.propTypes = {
     weekNumber: PropTypes.number.isRequired,
-    menus: PropTypes.object.isRequired,
+    menus: PropTypes.array.isRequired,
 };
