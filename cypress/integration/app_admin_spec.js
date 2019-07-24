@@ -171,6 +171,8 @@ describe('App', () => {
                 cy.route({
                     method: 'PUT',
                     url: 'api/restaurants/testRestaurant/menus',
+                    status: 200,
+                    response: {},
                 }).as('saveMenus');
 
                 cy.get('[data-cy=menuOverview_save]').click();
