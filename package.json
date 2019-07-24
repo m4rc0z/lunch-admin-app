@@ -2,12 +2,6 @@
   "name": "lunch-admin-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": {
-    "/api/*": {
-      "target": "http://localhost:3005",
-      "secure": false
-    }
-  },
   "dependencies": {
     "@material-ui/core": "3.8.1",
     "@material-ui/icons": "^3.0.1",
@@ -23,7 +17,7 @@
     "react-redux": "7.0.2",
     "redux": "4.0.1",
     "redux-saga": "1.0.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "2.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
