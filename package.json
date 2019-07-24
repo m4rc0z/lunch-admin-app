@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": {
-    "/api/": {
+    "/api/*": {
       "target": "http://localhost:3005",
       "secure": false
     }
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "cypress": "3.1.2",
+    "cypress": "3.3.0",
     "eslint-config-standard": "12.0.0",
     "eslint-config-standard-jsx": "6.0.2",
     "eslint-plugin-cypress": "^2.2.0",
