@@ -62,7 +62,7 @@ export default class Auth {
     }
 
     checkIsAdmin(profile) {
-        const roles = profile['lunchmenuapp/roles'] || [];
+        const roles = profile['https://lunchmenuapp/roles'] || [];
         return roles.indexOf('admin') > -1;
     }
 
