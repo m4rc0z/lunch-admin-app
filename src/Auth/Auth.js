@@ -62,7 +62,7 @@ export default class Auth {
     }
 
     checkIsAdmin(profile) {
-        const roles = profile[`${AUTH_CONFIG.domain}/roles`] || [];
+        const roles = profile[`https://${AUTH_CONFIG.domain}/roles`] || [];
         return roles.indexOf('admin') > -1;
     }
 
