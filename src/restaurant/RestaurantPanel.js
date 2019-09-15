@@ -6,8 +6,8 @@ function RestaurantPanel(props) {
     const {restaurant} = props;
     return (
         <Link to={{pathname: `/restaurants/${restaurant.RID}`}} data-cy={`restaurant-${restaurant.RID}`}>
-            <div>{restaurant.RID}</div>
-            <div>{restaurant.name}</div>
+            { !restaurant.name && (<div>{restaurant.RID}</div>)}
+            { restaurant.name && (<div>{restaurant.name}</div>)}
         </Link>
     );
 }

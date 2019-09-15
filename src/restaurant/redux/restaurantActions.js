@@ -82,3 +82,23 @@ export const setRestaurantAction = (restaurant) => ({
     restaurant
 });
 
+export const saveRestaurantActionType = '[RESTAURANT] save restaurant';
+
+export const saveRestaurantAction = (restaurant) => ({
+    type: saveRestaurantActionType,
+    restaurant,
+});
+
+export const saveRestaurantSuccessActionType = '[RESTAURANT] save restaurant success';
+
+export const saveRestaurantSuccessAction = (restaurantId) => ({
+    type: saveRestaurantSuccessActionType,
+    restaurantId,
+});
+
+export const saveRestaurantFailActionType = '[RESTAURANT] update restaurant fail';
+
+export const saveRestaurantFailAction = () => ({
+    type: saveRestaurantFailActionType,
+});
+
