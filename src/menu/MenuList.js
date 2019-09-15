@@ -15,6 +15,8 @@ const MenuList = (props) => {
         <FlexColumnContainer>
             <FlexContainer>
                 <HeadingContainer>Wochentag</HeadingContainer>
+                <HeadingContainer>Preis</HeadingContainer>
+                <HeadingContainer>Kategorien</HeadingContainer>
                 <HeadingContainer>Gang 1</HeadingContainer>
                 <HeadingContainer>Gang 2</HeadingContainer>
                 <HeadingContainer>Gang 3</HeadingContainer>
@@ -24,6 +26,11 @@ const MenuList = (props) => {
                     return (
                         menu.courses && menu.courses.length > 0 && <FlexContainer key={i}>
                             <FlexGrowContainer>{getWeekDay(new Date(menu.date))}</FlexGrowContainer>
+                            <FlexGrowContainer>{menu.price}</FlexGrowContainer>
+                            <FlexGrowContainer>{menu.categories.reduce((acc, curr) => {
+                                acc += curr.description;
+                                return acc;
+                            }, '')}</FlexGrowContainer>
                             <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course1`}>{menu.courses[0] && menu.courses[0].description}</FlexGrowContainer>
                             <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course2`}>{menu.courses[1] && menu.courses[1].description}</FlexGrowContainer>
                             <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}course3`}>{menu.courses[2] && menu.courses[2].description}</FlexGrowContainer>

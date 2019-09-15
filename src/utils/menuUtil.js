@@ -6,6 +6,7 @@ const convertImportedMenus = function(importedMenus) {
             id: menu._id,
             date: createDate(menu.Datum),
             price: menu.Preis,
+            categories: menu.Kategorien.split(','),
             courses: [
                 { course: '1', description: menu.Gang1 },
                 { course: '2', description: menu.Gang2 },
