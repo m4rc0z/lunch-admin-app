@@ -27,7 +27,7 @@ const MenuList = (props) => {
                         menu.courses && menu.courses.length > 0 && <FlexContainer key={i}>
                             <FlexGrowContainer>{getWeekDay(new Date(menu.date))}</FlexGrowContainer>
                             <FlexGrowContainer>{menu.price}</FlexGrowContainer>
-                            <FlexGrowContainer>{menu.categories.reduce((acc, curr) => {
+                            <FlexGrowContainer data-cy={`week${props.weekNumber}MenuIndex${i}categories`}>{menu.categories.reduce((acc, curr) => {
                                 acc += curr.description;
                                 return acc;
                             }, '')}</FlexGrowContainer>

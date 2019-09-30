@@ -37,7 +37,7 @@ export function* watchGetRestaurants() {
         try {
             const authToken = yield select(getAuthToken);
 
-            const res = yield call(fetch, `/api/restaurants/`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export function* watchGetRestaurantMenus() {
         try {
             const authToken = yield select(getAuthToken);
 
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export function* watchDeleteRestaurantMenus() {
     yield takeEvery(deleteRestaurantMenusActionType, function* (action) {
         try {
             const authToken = yield select(getAuthToken);
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export function* watchUpdateMenus() {
     yield takeEvery(updateRestaurantMenusActionType, function* (action) {
         try {
             const authToken = yield select(getAuthToken);
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export function* watchSaveRestaurant() {
     yield takeEvery(saveRestaurantActionType, function* (action) {
         try {
             const authToken = yield select(getAuthToken);
-            const res = yield call(fetch, `/api/restaurants/${action.restaurant.RID}`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurant.RID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

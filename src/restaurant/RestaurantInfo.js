@@ -49,6 +49,10 @@ function RestaurantInfo(props) {
                     <InputLabel htmlFor="restaurant-city">Stadt</InputLabel>
                     <Input id="restaurant-city" onChange={handleChange('city')} defaultValue={props.restaurant && props.restaurant.city}/>
                 </FormControl>
+                <form action={`/unauthenticated/api/restaurants/${props.restaurantId}/image`} method="post" encType="multipart/form-data">
+                    <input type='file' name='image'/>
+                    <button type="submit">send</button>
+                </form>
                 <Button onClick={() => saveRestaurant()} variant="contained" color="primary">
                     Speichern
                 </Button>

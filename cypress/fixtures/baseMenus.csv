@@ -1,4 +1,4 @@
-Datum;Gang1;Gang2;Gang3
-01.02.2019;Salat;Schnitzel;Apfelstrudel
-02.02.2019;Salat2;Schnitzel2;Apfelstrudel2
-03.02.2019;Salat3;Schnitzel3;Apfelstrudel3
+Datum;Gang1;Gang2;Gang3;Kategorien
+01.02.2019;Salat;Schnitzel;Apfelstrudel;Vegan,Vegetarisch
+02.02.2019;Salat2;Schnitzel2;Apfelstrudel2;
+03.02.2019;Salat3;Schnitzel3;Apfelstrudel3;
