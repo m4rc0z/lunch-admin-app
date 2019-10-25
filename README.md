@@ -14,7 +14,7 @@ $ docker build -t m4rc0z/lunch-admin-app .
 Run container:
 
 ```bash
-$ docker run --env-file ./env.list -p 127.0.0.1:3000:3000/tcp -it m4rc0z/lunch-admin-app:latest
+$ docker run -p 127.0.0.1:3000:80/tcp -it m4rc0z/lunch-admin-app:latest
 ```
 
 Connect with: http://localhost:3000
