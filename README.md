@@ -3,6 +3,36 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Below you will find some information on how to perform common tasks.<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
+## Docker
+
+Build container:
+
+``` bash
+$ docker build -t m4rc0z/lunch-admin-app .
+```
+
+Run container:
+
+```bash
+$ docker run --env-file ./env.list -p 127.0.0.1:3000:3000/tcp -it m4rc0z/lunch-admin-app:latest
+```
+
+Connect with: http://localhost:3000
+
+Stop the container:
+
+```bash
+$ docker stop --time 0 $(docker ps -q --filter ancestor=m4rc0z/lunch-admin-app)
+```
+
+Debug container:
+
+```bash
+$ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
+```
+
+
+
 ## Table of Contents
 
 - [Updating to New Releases](#updating-to-new-releases)
