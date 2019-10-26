@@ -1,6 +1,4 @@
-variable "hcloud_token" {
-  default = ""
-}
+variable "hcloud_token" {}
 
 variable "hcloud_ssh_keys" {
   type    = list(string)

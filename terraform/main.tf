@@ -8,3 +8,8 @@ module "infrastructure" {
   hosts           = "${var.node_count}"
   hostname_format = "${var.hostname_format}"
 }
+
+module "apps" {
+  source = "./apps"
+  public_ips  = "${module.infrastructure.public_ips}"
+}
