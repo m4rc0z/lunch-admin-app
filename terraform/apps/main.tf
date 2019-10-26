@@ -1,5 +1,6 @@
 provider "docker" {
   host = "ssh://root@${element(var.public_ips, 0)}:22"
+  version = "2.5"
 }
 
 # declare any input variables

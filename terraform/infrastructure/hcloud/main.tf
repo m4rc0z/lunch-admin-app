@@ -25,7 +25,8 @@ variable "ssh_keys" {
 }
 
 provider "hcloud" {
-  token = "${var.token}"
+  token   = "${var.token}"
+  version = "1.14"
 }
 
 variable "apt_packages" {
