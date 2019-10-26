@@ -7,8 +7,14 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 Build container:
 
-``` bash
+```bash
 $ docker build -t m4rc0z/lunch-admin-app .
+```
+
+Publish container:
+
+```bash
+$ docker push m4rc0z/lunch-admin-app
 ```
 
 Run container:
@@ -31,6 +37,34 @@ Debug container:
 $ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
 ```
 
+## Terraform
+
+```bash
+$ export TF_VAR_hcloud_token='XXXX'
+$ terraform init
+$ terraform apply -target=module.infrastructure
+
+---------------------------------------------------------------------------------------------------------------------------------
+NOTE: you need to login to the Hetzner server with your ssh key (default: ~/.ssh/hetzner.pub) and accept the fingerprint
+
+This typically means you need to start an ssh-agent:
+
+$ ssh-agent
+
+and add the ssh key:
+
+$ ssh-add ~/.ssh/hetzner
+---------------------------------------------------------------------------------------------------------------------------------
+
+Remove fingerprint if existing already:
+$ ssh-keygen -f "/home/your-username/.ssh/known_hosts" -R ssh root@78.47.42.48
+$ ssh root@78.47.42.48
+
+If this works without a prompt continue with:
+
+$ terraform init
+$ terraform apply -target=module.apps
+```
 
 
 ## Table of Contents
