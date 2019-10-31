@@ -5,6 +5,7 @@ services:
   traefik:
     image: "traefik:v2.0.4"
     container_name: "traefik"
+    restart: always
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -22,6 +23,7 @@ services:
   frontend:
     image: m4rc0z/lunch-admin-app
     container_name: "lunch-admin-app"
+    restart: "always"
     ports:
       - 3000:80
     environment:
@@ -39,6 +41,7 @@ services:
   backend:
     image: m4rc0z/lunch-app-backend
     container_name: "lunch-app-backend"
+    restart: "always"
     ports:
       - 3005:3005
     environment:
