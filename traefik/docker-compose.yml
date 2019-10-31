@@ -9,7 +9,7 @@ services:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=true"
+      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entryPoints.web-secure.address=:443"
       - "--log.level=debug"
@@ -19,7 +19,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  lunch:
+  frontend:
     image: m4rc0z/lunch-admin-app
     container_name: "lunch-admin-app"
     ports:
@@ -29,15 +29,12 @@ services:
       - AUTH_AUDIENCE=https://lunchmenuapp/api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lunch.rule=Host(`lunch-admin-app.ch`)"
-      - "traefik.http.routers.lunch.entrypoints=web"
-      - "traefik.http.routers.lunch.entrypoints=web-secure"
-      - "traefik.http.middlewares.lunch-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.lunch-http.middlewares=lunch-https@docker"
-      - "traefik.http.routers.lunch.tls=true"
-      #- "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-      #- "traefik.http.routers.lunch.middlewares=https_redirect"
-      #- "traefik.http.routers.lunch.tls"
+      - "traefik.http.routers.frontend.rule=Host(`lunch-admin-app.ch`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.entrypoints=web-secure"
+      - "traefik.http.middlewares.frontend-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.frontend-http.middlewares=frontend-https@docker"
+      - "traefik.http.routers.frontend.tls=true"
 
   backend:
     image: m4rc0z/lunch-app-backend
