@@ -10,8 +10,8 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entryPoints.web-secure.address=:443"
+      - "--entrypoints.lunchmenuapp.address=:80"
+      - "--entryPoints.lunchmenuapp-secure.address=:443"
       - "--log.level=debug"
     ports:
       - "443:3000"
@@ -30,8 +30,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`lunch-admin-app.ch`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.routers.frontend.entrypoints=web-secure"
+      - "traefik.http.routers.frontend.entrypoints=lunchmenuapp"
+      - "traefik.http.routers.frontend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.frontend-https.redirectscheme.scheme=https"
       - "traefik.http.routers.frontend-http.middlewares=frontend-https@docker"
       - "traefik.http.routers.frontend.tls=true"
@@ -54,8 +54,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`lunch-admin-app.ch`) && PathPrefix(`/authenticated/api`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.routers.backend.entrypoints=web-secure"
+      - "traefik.http.routers.backend.entrypoints=lunchmenuapp"
+      - "traefik.http.routers.backend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
       - "traefik.http.routers.backend-http.middlewares=backend-https@docker"
       - "traefik.http.routers.backend.tls=true"
