@@ -1,19 +1,21 @@
 version: "3.3"
 
 services:
-
   traefik:
     image: "traefik:v2.0.4"
     container_name: "traefik"
     restart: always
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=info"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.lunchmenuapp.address=:80"
       - "--entryPoints.lunchmenuapp-secure.address=:443"
-      - "--log.level=debug"
+      #- "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      #- "--metrics.prometheus.entrypoint=metrics"
+    labels:
+      - "traefik.http.routers.traefik-api.rule=Host(`traefik.localhost`)"
     ports:
       - "443:3000"
       - "8080:8080"
@@ -31,7 +33,7 @@ services:
       - AUTH_AUDIENCE=https://lunchmenuapp/api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`lunch-admin-app.ch`)"
+      - "traefik.http.routers.frontend.rule=(Host(`frontend.localhost`) || Host(`lunch-admin-app.ch`))"
       - "traefik.http.routers.frontend.entrypoints=lunchmenuapp"
       - "traefik.http.routers.frontend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.frontend-https.redirectscheme.scheme=https"
@@ -56,7 +58,7 @@ services:
       - API_SECRET=XXX
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`lunch-admin-app.ch`) && PathPrefix(`/authenticated/api`)"
+      - "traefik.http.routers.backend.rule=(Host(`backend.localhost`) || Host(`lunch-admin-app.ch`)) && PathPrefix(`/authenticated/api`)"
       - "traefik.http.routers.backend.entrypoints=lunchmenuapp"
       - "traefik.http.routers.backend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
