@@ -6,19 +6,27 @@ services:
     container_name: "traefik"
     restart: always
     command:
-      - "--log.level=info"
+      - "--log.level=debug"
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.lunchmenuapp.address=:80"
       - "--entryPoints.lunchmenuapp-secure.address=:443"
       #- "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
       #- "--metrics.prometheus.entrypoint=metrics"
     labels:
-      - "traefik.http.routers.traefik-api.rule=Host(`traefik.localhost`)"
+      #- "traefik.http.routers.traefik-api.rule=Host(`traefik.localhost`)"
+      #- "traefik.http.routers.frontend.rule=(Host(`frontend.localhost`) || Host(`lunch-admin-app.ch`))"
+      #- "traefik.enable=true"
+      - "traefik.http.routers.traefik1_router_http.rule=Host(`traefik.localhost`)"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.traefik1_router_http.middlewares=https_redirect"
+      - "traefik.http.routers.traefik1_router_https.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik1_router_https.tls"
+      - "traefik.http.services.traefik1_service.loadbalancer.server.port=8080"
     ports:
-      - "443:3000"
-      - "8080:8080"
+      - "443:443"
+      - "80:80"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
@@ -33,7 +41,7 @@ services:
       - AUTH_AUDIENCE=https://lunchmenuapp/api
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=(Host(`frontend.localhost`) || Host(`lunch-admin-app.ch`))"
+      - "traefik.http.routers.frontend.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.frontend.entrypoints=lunchmenuapp"
       - "traefik.http.routers.frontend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.frontend-https.redirectscheme.scheme=https"
@@ -58,7 +66,7 @@ services:
       - API_SECRET=XXX
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=(Host(`backend.localhost`) || Host(`lunch-admin-app.ch`)) && PathPrefix(`/authenticated/api`)"
+      - "traefik.http.routers.backend.rule=Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
       - "traefik.http.routers.backend.entrypoints=lunchmenuapp"
       - "traefik.http.routers.backend.entrypoints=lunchmenuapp-secure"
       - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
