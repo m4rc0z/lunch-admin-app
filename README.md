@@ -31,7 +31,14 @@ Debug container:
 $ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
 ```
 
+## Traefik
 
+1. Build frontend container
+2. Build backend container
+3. Replace all backend `environment` variables in `traefik/docker-compose.yml` with valid values
+4. Start with: `$ docker-compose -f traefik/docker-compose.yml up`
+5. Access frontend  with: https://traefic.localhost
+6. Access traefik web ui with: http://traefic.localhost:8080/dashboard
 
 ## Table of Contents
 
