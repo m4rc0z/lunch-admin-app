@@ -9,6 +9,11 @@ import {
     getRestaurantMenusAction,
     getRestaurantMenusActionType,
     getRestaurantsActionType,
+    saveRestaurantActionType,
+    saveRestaurantFailAction,
+    saveRestaurantFailActionType,
+    saveRestaurantSuccessAction,
+    saveRestaurantSuccessActionType,
     setRestaurantAction,
     setRestaurantsAction,
     showErrorToastAction,
@@ -32,7 +37,7 @@ export function* watchGetRestaurants() {
         try {
             const authToken = yield select(getAuthToken);
 
-            const res = yield call(fetch, `/api/restaurants/`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +61,7 @@ export function* watchGetRestaurantMenus() {
         try {
             const authToken = yield select(getAuthToken);
 
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +94,7 @@ export function* watchDeleteRestaurantMenus() {
     yield takeEvery(deleteRestaurantMenusActionType, function* (action) {
         try {
             const authToken = yield select(getAuthToken);
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +134,7 @@ export function* watchUpdateMenus() {
     yield takeEvery(updateRestaurantMenusActionType, function* (action) {
         try {
             const authToken = yield select(getAuthToken);
-            const res = yield call(fetch, `/api/restaurants/${action.restaurantId}/menus`, {
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/menus`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,6 +182,54 @@ export function* watchUpdateMenusSuccess() {
     })
 }
 
+export function* watchSaveRestaurant() {
+    yield takeEvery(saveRestaurantActionType, function* (action) {
+        try {
+            const authToken = yield select(getAuthToken);
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurant.RID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: JSON.stringify(action.restaurant),
+            });
+            if (res.status !== 200) {
+                yield [
+                    yield put(saveRestaurantFailAction()),
+                ];
+            } else {
+                yield [
+                    yield put(setRestaurantAction(yield res.json())),
+                    yield put(saveRestaurantSuccessAction(action.restaurantId)),
+                ];
+            }
+        } catch (err) {
+            yield put(showErrorToastAction('Fehler beim Speichern der Menüs'))
+        }
+    });
+}
+
+export function* watchSaveRestaurantError() {
+    yield takeEvery(saveRestaurantFailActionType, function* (action) {
+        yield put(showErrorToastAction('Fehler beim Speichern des Restaurants'));
+    })
+}
+
+export function* watchSaveRestaurantSuccess() {
+    yield takeEvery(saveRestaurantSuccessActionType, function* (action) {
+        yield put(showNotificationAction({
+            message: 'Restaurant erfolgreich gespeichert',
+            options: {
+                variant: 'success',
+                autoHideDuration: 3000,
+            }
+        }));
+        yield put(getRestaurantMenusAction(action.restaurantId));
+    })
+}
+
 export function* watchGetRestaurantsError() {
     yield takeEvery(showErrorToastActionType, function* (action) {
         yield put(showNotificationAction({
@@ -212,6 +265,9 @@ export default function* restaurantSaga() {
         watchDeleteMenusError(),
         watchUpdateMenusSuccess(),
         watchUpdateMenus(),
-        watchUpdateMenusError()
+        watchUpdateMenusError(),
+        watchSaveRestaurant(),
+        watchSaveRestaurantSuccess(),
+        watchSaveRestaurantError(),
     ])
 }

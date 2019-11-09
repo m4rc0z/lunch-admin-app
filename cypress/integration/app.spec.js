@@ -100,12 +100,12 @@ describe('App', () => {
 
     describe('Restaurant Menus Non-Admin', () => {
         describe('Load Menus', () => {
-            it('should show requested menus if user is logged in', () => {
+            it.only('should show requested menus if user is logged in', () => {
                 cy.server();
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant/menus',
+                    'authenticated/api/restaurants/testRestaurant/menus',
                     '@getMenusFixture',
                 ).as('getMenusForWeek');
                 cy.visit('/restaurants/testRestaurant', {
@@ -121,7 +121,10 @@ describe('App', () => {
                     .get('[data-cy=week15MenuIndex0course2]')
                     .contains('Schnitzel')
                     .get('[data-cy=week15MenuIndex0course3]')
-                    .contains('Eis');
+                    .contains('Eis')
+                    .get('[data-cy=week15MenuIndex0categories]')
+                    .contains('Vegan')
+                    .contains('Vegetarisch');
 
                 cy
                     .get('[data-cy=expansionPanelTitle31]')
@@ -135,7 +138,7 @@ describe('App', () => {
             });
         });
         describe('Save Menus', () => {
-            function checkMenuOverView(index, dateString, course1, course2, course3) {
+            function checkMenuOverView(index, dateString, course1, course2, course3, categories) {
                 cy.get(`[data-cy=menuOverview_${index}_date]`).contains(dateString);
                 cy.get(`[data-cy=menuOverview_${index}_course1]`).contains(course1);
                 cy.get(`[data-cy=menuOverview_${index}_course2]`).contains(course2);
@@ -172,7 +175,7 @@ describe('App', () => {
                 cy.server();
                 cy.route({
                     method: 'PUT',
-                    url: 'api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api//restaurants/testRestaurant/menus',
                     status: 200,
                     response: {},
                 }).as('saveMenus');
@@ -209,7 +212,7 @@ describe('App', () => {
                 cy.server();
                 cy.route({
                     method: 'PUT',
-                    url: 'api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api//restaurants/testRestaurant/menus',
                     status: 500,
                     response: {},
                 }).as('saveMenus');
@@ -249,14 +252,14 @@ describe('App', () => {
                 cy.server();
                 cy.route({
                     method: 'PUT',
-                    url: 'api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api//restaurants/testRestaurant/menus',
                     status: 200,
                     response: {},
                 }).as('saveMenus');
 
                 cy.route({
                     method: 'GET',
-                    url: '/api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api/restaurants/testRestaurant/menus',
                     onResponse: () => {
                         done();
                     },
@@ -277,7 +280,7 @@ describe('App', () => {
                 cy.server();
                 cy.route({
                     method: 'DELETE',
-                    url: 'api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api/restaurants/testRestaurant/menus',
                     status: 200,
                     response: {},
                     onRequest(...args) {
@@ -288,7 +291,7 @@ describe('App', () => {
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(
                     'GET',
-                    'api/restaurants/testRestaurant/menus',
+                    'authenticated/api/restaurants/testRestaurant/menus',
                     '@getMenusFixture',
                 ).as('getMenusForWeek');
 
@@ -309,7 +312,7 @@ describe('App', () => {
                 cy.server();
                 cy.route({
                     method: 'DELETE',
-                    url: '/api/restaurants/testRestaurant/menus',
+                    url: 'authenticated/api/restaurants/testRestaurant/menus',
                     status: 200,
                     response: {},
                 }).as('deleteMenus');
@@ -317,7 +320,7 @@ describe('App', () => {
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant/menus',
+                    'authenticated/api/restaurants/testRestaurant/menus',
                     '@getMenusFixture',
                 ).as('getMenusForWeek');
 
@@ -344,13 +347,13 @@ describe('App', () => {
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant/menus',
+                    'authenticated/api/restaurants/testRestaurant/menus',
                     '@getMenusFixture',
                 ).as('getMenusForWeek');
                 cy.fixture('./getMenusFixture2.json').as('getMenusFixture2');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant2/menus',
+                    'authenticated/api/restaurants/testRestaurant2/menus',
                     '@getMenusFixture2',
                 ).as('getMenusForWeek2');
                 cy.visit('/restaurants/testRestaurant', {
@@ -408,7 +411,7 @@ describe('App', () => {
                 cy.fixture('./getRestaurantsFixture.json').as('getRestaurants');
                 cy.route(
                     'GET',
-                    '/api/restaurants/',
+                    'authenticated/api/restaurants/',
                     '@getRestaurants',
                 ).as('getRestaurants');
 
@@ -434,13 +437,13 @@ describe('App', () => {
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant/menus',
+                    'authenticated/api/restaurants/testRestaurant/menus',
                     '@getMenusFixture',
                 ).as('getMenusForWeek');
                 cy.fixture('./getMenusFixture2.json').as('getMenusFixture2');
                 cy.route(
                     'GET',
-                    '/api/restaurants/testRestaurant2/menus',
+                    'authenticated/api/restaurants/testRestaurant2/menus',
                     '@getMenusFixture2',
                 ).as('getMenusForWeek2');
                 cy.visit('/restaurants/testRestaurant', {

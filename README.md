@@ -7,6 +7,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 Build container:
 
+
 ```bash
 $ docker build -t m4rc0z/lunch-admin-app .
 ```
@@ -65,6 +66,16 @@ If this works without a prompt continue with:
 $ terraform init
 $ terraform apply -target=module.apps
 ```
+
+
+## Traefik
+
+1. Build frontend container
+2. Build backend container
+3. Replace all backend `environment` variables in `traefik/docker-compose.yml` with valid values
+4. Start with: `$ docker-compose -f traefik/docker-compose.yml up`
+5. Access frontend  with: https://traefic.localhost
+6. Access traefik web ui with: http://traefic.localhost:8080/dashboard
 
 
 ## Table of Contents

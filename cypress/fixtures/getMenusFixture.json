@@ -22,7 +22,8 @@
         }
       ],
       "_id": "5d067afcd168d0239dce9d6b",
-      "date": "2019-08-31T22:00:00.000Z"
+      "date": "2019-08-31T22:00:00.000Z",
+      "categories": []
     },
     {
       "courses": [
@@ -43,7 +44,8 @@
         }
       ],
       "_id": "5d067afcd168d0239dce9d6c",
-      "date": "2019-08-01T22:00:00.000Z"
+      "date": "2019-08-01T22:00:00.000Z",
+      "categories": []
     },
     {
       "courses": [
@@ -64,7 +66,8 @@
         }
       ],
       "_id": "5d067afcd168d0239dce9d6d",
-      "date": "2019-08-02T22:00:00.000Z"
+      "date": "2019-08-02T22:00:00.000Z",
+      "categories": []
     },
     {
       "courses": [
@@ -85,7 +88,17 @@
         }
       ],
       "_id": "5d067afcd168d0239dce9d6d",
-      "date": "2019-04-08T22:00:00.000Z"
+      "date": "2019-04-08T22:00:00.000Z",
+      "categories": [
+        {
+          "_id": "abc",
+          "description": "Vegan"
+        },
+        {
+          "_id": "def",
+          "description": "Vegetarisch"
+        }
+      ]
     }
   ]
 }

@@ -13,7 +13,7 @@ const getWeekDay = function(date) {
 
 const createDate = function(germanDateString) {
     const dayMonthYear = germanDateString.split('.');
-    return new Date(dayMonthYear[2], dayMonthYear[1]-1, dayMonthYear[0]);
+    return new Date(Date.UTC(dayMonthYear[2], dayMonthYear[1]-1, dayMonthYear[0], 0, 0));
 };
 
 exports.getWeekNumber = getWeekNumber;

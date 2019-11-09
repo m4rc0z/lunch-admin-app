@@ -11,10 +11,18 @@ import {showNotificationAction} from "./components/notification/redux/notificati
 import Restaurant from "./restaurant/Restaurant";
 import RestaurantMenus from "./menu/RestaurantMenus";
 import * as PropTypes from "prop-types";
+import RestaurantInfo from "./restaurant/RestaurantInfo";
+
+const StyledInnerContainer = styled.div`
+  height: 100%;
+  background-color: #e3e3e3;
+  padding: 20px;
+`;
 
 const StyledRouteContainer = styled.div`
   height: 100%;
   width: 100%;
+  background-color: #e3e3e3;
 `;
 
 const StyledMainRouteContainer = styled.div`
@@ -55,9 +63,9 @@ function MainRoutes() {
                                 ?
                                 <StyledRouteContainer>
                                     <NavBar auth={auth} history={history} landingPage={"false"}/>
-                                    <StyledRouteContainer>
+                                    <StyledInnerContainer>
                                         <Restaurant auth={auth} {...props}/>
-                                    </StyledRouteContainer>
+                                    </StyledInnerContainer>
                                 </StyledRouteContainer>
                                 :
                                 <Redirect to={`/restaurants/${auth.getUserId()}`}/>
@@ -66,14 +74,31 @@ function MainRoutes() {
                     <Route exact path="/restaurants/:id" render={(props) => {
                         return (<StyledRouteContainer>
                                 <NavBar auth={auth} history={history} landingPage={"false"}/>
-                                <StyledRouteContainer>
+                                <StyledInnerContainer>
                                     {
                                         props.match.params.id === auth.getUserId() || auth.getIsAdmin()
-                                            ? <RestaurantMenus auth={auth} {...props}
+                                            ? <RestaurantMenus
+                                                auth={auth} {...props}
+                                                restaurantId={props.match.params.id}
+                                                click={() => history.push(`/restaurants/${props.match.params.id}/edit`)}
+                                            />
+                                            : undefined
+                                    }
+                                </StyledInnerContainer>
+                            </StyledRouteContainer>
+                        );
+                    }}/>
+                    <Route exact path="/restaurants/:id/edit" render={(props) => {
+                        return (<StyledRouteContainer>
+                                <NavBar auth={auth} history={history} landingPage={"false"}/>
+                                <StyledInnerContainer>
+                                    {
+                                        props.match.params.id === auth.getUserId() || auth.getIsAdmin()
+                                            ? <RestaurantInfo auth={auth} {...props}
                                                                restaurantId={props.match.params.id}/>
                                             : undefined
                                     }
-                                </StyledRouteContainer>
+                                </StyledInnerContainer>
                             </StyledRouteContainer>
                         );
                     }}/>
