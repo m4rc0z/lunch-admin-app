@@ -58,8 +58,4 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
-      - "traefik.http.routers.backend.entrypoints=frontend"
-      - "traefik.http.routers.backend.entrypoints=frontend-secure"
-      - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.backend-http.middlewares=backend-https@docker"
       - "traefik.http.routers.backend.tls=true"
