@@ -11,8 +11,8 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.frontend-web.address=:80"
-      - "--entryPoints.frontend-web-secure.address=:443"
+      - "--entrypoints.frontend.address=:80"
+      - "--entryPoints.frontend-secure.address=:443"
     ports:
       - "80:80"
       - "443:443"
@@ -32,12 +32,12 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.unchapp-admin-redirect-web-secure.redirectscheme.scheme=https
-      - traefik.http.routers.frontend-web.middlewares=unchapp-admin-redirect-web-secure
-      - traefik.http.routers.frontend-web.rule=Host(`traefik.localhost`)
-      - traefik.http.routers.frontend-web.entrypoints=frontend-web
-      - traefik.http.routers.frontend-web-secure.rule=Host(`traefik.localhost`)
-      - traefik.http.routers.frontend-web-secure.tls=true
-      - traefik.http.routers.frontend-web-secure.entrypoints=frontend-web-secure
+      - traefik.http.routers.frontend.middlewares=unchapp-admin-redirect-web-secure
+      - traefik.http.routers.frontend.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.frontend.entrypoints=frontend
+      - traefik.http.routers.frontend-secure.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.frontend-secure.tls=true
+      - traefik.http.routers.frontend-secure.entrypoints=frontend-secure
 
   backend:
     image: m4rc0z/lunch-app-backend
@@ -58,8 +58,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
-      - "traefik.http.routers.backend.entrypoints=frontend-web"
-      - "traefik.http.routers.backend.entrypoints=frontend-web-secure"
+      - "traefik.http.routers.backend.entrypoints=frontend"
+      - "traefik.http.routers.backend.entrypoints=frontend-secure"
       - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
       - "traefik.http.routers.backend-http.middlewares=backend-https@docker"
       - "traefik.http.routers.backend.tls=true"
