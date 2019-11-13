@@ -11,8 +11,8 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.lunchmenuapp.address=:80"
-      - "--entryPoints.lunchmenuapp-secure.address=:443"
+      - "--entrypoints.frontend.address=:80"
+      - "--entryPoints.frontend-secure.address=:443"
     ports:
       - "80:80"
       - "443:443"
@@ -31,12 +31,13 @@ services:
       - AUTH_AUDIENCE=https://lunchmenuapp/api
     labels:
       - "traefik.enable=true"
+      - "traefik.http.middlewares.unchapp-admin-redirect-web-secure.redirectscheme.scheme=https"
+      - "traefik.http.routers.frontend.middlewares=unchapp-admin-redirect-web-secure"
       - "traefik.http.routers.frontend.rule=Host(`traefik.localhost`)"
-      - "traefik.http.routers.frontend.entrypoints=lunchmenuapp"
-      - "traefik.http.routers.frontend.entrypoints=lunchmenuapp-secure"
-      - "traefik.http.middlewares.frontend-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.frontend-http.middlewares=frontend-https@docker"
-      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.entrypoints=frontend"
+      - "traefik.http.routers.frontend-secure.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.frontend-secure.tls=true"
+      - "traefik.http.routers.frontend-secure.entrypoints=frontend-secure"
 
   backend:
     image: m4rc0z/lunch-app-backend
@@ -57,8 +58,4 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
-      - "traefik.http.routers.backend.entrypoints=lunchmenuapp"
-      - "traefik.http.routers.backend.entrypoints=lunchmenuapp-secure"
-      - "traefik.http.middlewares.backend-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.backend-http.middlewares=backend-https@docker"
       - "traefik.http.routers.backend.tls=true"
