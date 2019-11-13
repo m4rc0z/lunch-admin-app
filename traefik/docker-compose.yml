@@ -30,14 +30,14 @@ services:
       - AUTH_DOMAIN=lunchmenuapp.eu.auth0.com
       - AUTH_AUDIENCE=https://lunchmenuapp/api
     labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.unchapp-admin-redirect-web-secure.redirectscheme.scheme=https
-      - traefik.http.routers.frontend.middlewares=unchapp-admin-redirect-web-secure
-      - traefik.http.routers.frontend.rule=Host(`traefik.localhost`)
-      - traefik.http.routers.frontend.entrypoints=frontend
-      - traefik.http.routers.frontend-secure.rule=Host(`traefik.localhost`)
-      - traefik.http.routers.frontend-secure.tls=true
-      - traefik.http.routers.frontend-secure.entrypoints=frontend-secure
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.unchapp-admin-redirect-web-secure.redirectscheme.scheme=https"
+      - "traefik.http.routers.frontend.middlewares=unchapp-admin-redirect-web-secure"
+      - "traefik.http.routers.frontend.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=frontend"
+      - "traefik.http.routers.frontend-secure.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.frontend-secure.tls=true"
+      - "traefik.http.routers.frontend-secure.entrypoints=frontend-secure"
 
   backend:
     image: m4rc0z/lunch-app-backend
