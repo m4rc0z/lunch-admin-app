@@ -7,7 +7,6 @@ provider "docker" {
 
 # create docker volume resource
 
-
 # create docker network resource
 resource "docker_network" "lunch_network" {
   name = "lunch_network"
@@ -26,9 +25,9 @@ resource "docker_container" "lunch-app-backend" {
   name     = "lunch-app-backend"
   labels   = {
     "id"=docker_image.lunch-app-backend.id
-    "traefik.enable" = true
-    "traefik.http.routers.backend.tls"  = true
-    "traefik.http.routers.backend.rule" = "Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
+    "traefik.enable"=true
+    "traefik.http.routers.backend.tls"=true
+    "traefik.http.routers.backend.rule"="Host(`dev.mealit.de`) && PathPrefix(`/authenticated/api`)"
   }
   image    = data.docker_registry_image.lunch-app-backend.name
   restart  = "always"
@@ -54,6 +53,8 @@ resource "docker_container" "lunch-app-backend" {
   ]
 }
 
+
+
 # create lunch-admin-app container
 data "docker_registry_image" "lunch-admin-app" {
   name = "blinkeyech/lunch-admin-app:latest"
@@ -64,7 +65,17 @@ resource "docker_image" "lunch-admin-app" {
 }
 resource "docker_container" "lunch-admin-app" {
   name          = "lunch-admin-app"
-  labels        = {"id"=docker_image.lunch-admin-app.id}
+  labels        = {
+    "id"=docker_image.lunch-admin-app.id
+    "traefik.enable"=true
+    "traefik.http.middlewares.lunchapp-admin-redirect-web-secure.redirectscheme.scheme"="https"
+    "traefik.http.routers.frontend.middlewares"="lunchapp-admin-redirect-web-secure"
+    "traefik.http.routers.frontend.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend.entrypoints"="frontend"
+    "traefik.http.routers.frontend-secure.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend-secure.tls"=true
+    "traefik.http.routers.frontend-secure.entrypoints"="frontend-secure"
+  }
   image         = data.docker_registry_image.lunch-admin-app.name
   restart       = "always"
   must_run      = true
@@ -75,5 +86,9 @@ resource "docker_container" "lunch-admin-app" {
   networks_advanced {
     name = docker_network.lunch_network.id
   }
+  env = [
+    "AUTH_DOMAIN=lunchmenuapp.eu.auth0.com",
+    "AUTH_AUDIENCE=https://lunchmenuapp/api",
+  ]
 }
 
