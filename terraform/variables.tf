@@ -38,6 +38,6 @@ variable "hostname_format" {
 }
 
 variable "apt_packages" {
-  type    = "list"
+  type    = list(string)
   default = ["ufw"]
 }

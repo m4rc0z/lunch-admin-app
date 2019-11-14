@@ -19,13 +19,13 @@ data "docker_registry_image" "lunch-app-backend" {
   name = "blinkeyech/lunch-app-backend:latest"
 }
 resource "docker_image" "lunch-app-backend" {
-  name          = "${data.docker_registry_image.lunch-app-backend.name}"
-  pull_triggers = ["${data.docker_registry_image.lunch-app-backend.sha256_digest}"]
+  name          = data.docker_registry_image.lunch-app-backend.name
+  pull_triggers = [data.docker_registry_image.lunch-app-backend.sha256_digest]
 }
 resource "docker_container" "lunch-app-backend" {
   name          = "lunch-app-backend"
-  labels        = {"id"="${docker_image.lunch-app-backend.id}"}
-  image        = "${data.docker_registry_image.lunch-app-backend.name}"
+  labels        = {"id"=docker_image.lunch-app-backend.id}
+  image        = data.docker_registry_image.lunch-app-backend.name
   restart      = "always"
   must_run     = true
   ports {
@@ -34,7 +34,7 @@ resource "docker_container" "lunch-app-backend" {
     #ip       = "127.0.0.1"
   }
   networks_advanced {
-    name = "${docker_network.lunch_network.id}"
+    name = docker_network.lunch_network.id
   }
   env = [
     "AUTH_DOMAIN=XXX",
@@ -54,13 +54,13 @@ data "docker_registry_image" "lunch-admin-app" {
   name = "blinkeyech/lunch-admin-app:latest"
 }
 resource "docker_image" "lunch-admin-app" {
-  name          = "${data.docker_registry_image.lunch-admin-app.name}"
-  pull_triggers = ["${data.docker_registry_image.lunch-admin-app.sha256_digest}"]
+  name          = data.docker_registry_image.lunch-admin-app.name
+  pull_triggers = [data.docker_registry_image.lunch-admin-app.sha256_digest]
 }
 resource "docker_container" "lunch-admin-app" {
   name          = "lunch-admin-app"
-  labels        = {"id"="${docker_image.lunch-admin-app.id}"}
-  image         = "${data.docker_registry_image.lunch-admin-app.name}"
+  labels        = {"id"=docker_image.lunch-admin-app.id}
+  image         = data.docker_registry_image.lunch-admin-app.name
   restart       = "always"
   must_run      = true
   ports {
@@ -68,7 +68,7 @@ resource "docker_container" "lunch-admin-app" {
     external = "3000"
   }
   networks_advanced {
-    name = "${docker_network.lunch_network.id}"
+    name = docker_network.lunch_network.id
   }
 }
 

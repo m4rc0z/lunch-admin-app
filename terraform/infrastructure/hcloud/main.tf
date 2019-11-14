@@ -5,32 +5,32 @@ variable "hosts" {
 }
 
 variable "hostname_format" {
-  type = "string"
+  type = string
 }
 
 variable "location" {
-  type = "string"
+  type = string
 }
 
 variable "type" {
-  type = "string"
+  type = string
 }
 
 variable "image" {
-  type = "string"
+  type = string
 }
 
 variable "ssh_keys" {
-  type = "list"
+  type = list(string)
 }
 
 provider "hcloud" {
-  token   = "${var.token}"
+  token   = var.token
   version = "1.14"
 }
 
 variable "apt_packages" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
@@ -40,13 +40,13 @@ resource "hcloud_ssh_key" "default" {
 }
 
 resource "hcloud_server" "host" {
-  name        = "${format(var.hostname_format, 1)}"
-  location    = "${var.location}"
-  image       = "${var.image}"
-  server_type = "${var.type}"
-  ssh_keys    = ["${hcloud_ssh_key.default.name}"]
+  name        = format(var.hostname_format, 1)
+  location    = var.location
+  image       = var.image
+  server_type = var.type
+  ssh_keys    = [hcloud_ssh_key.default.name]
 
-  count       = "${var.hosts}"
+  count       = var.hosts
 
   connection {
     user = "root"
@@ -73,5 +73,5 @@ resource "hcloud_server" "host" {
 
 output "public_ips" {
   depends_on  = [status]
-  value = "${hcloud_server.host.*.ipv4_address}"
+  value = hcloud_server.host.*.ipv4_address
 }
