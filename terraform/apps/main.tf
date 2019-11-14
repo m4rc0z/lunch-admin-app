@@ -16,18 +16,23 @@ resource "docker_network" "lunch_network" {
 
 # create lunch-app-backend container
 data "docker_registry_image" "lunch-app-backend" {
-  name = "blinkeyech/lunch-app-backend:latest"
+  name = "m4rc0z/lunch-app-backend:latest"
 }
 resource "docker_image" "lunch-app-backend" {
   name          = data.docker_registry_image.lunch-app-backend.name
   pull_triggers = [data.docker_registry_image.lunch-app-backend.sha256_digest]
 }
 resource "docker_container" "lunch-app-backend" {
-  name          = "lunch-app-backend"
-  labels        = {"id"=docker_image.lunch-app-backend.id}
-  image        = data.docker_registry_image.lunch-app-backend.name
-  restart      = "always"
-  must_run     = true
+  name     = "lunch-app-backend"
+  labels   = {
+    "id"=docker_image.lunch-app-backend.id
+    "traefik.enable" = true
+    "traefik.http.routers.backend.tls"  = true
+    "traefik.http.routers.backend.rule" = "Host(`traefik.localhost`) && PathPrefix(`/authenticated/api`)"
+  }
+  image    = data.docker_registry_image.lunch-app-backend.name
+  restart  = "always"
+  must_run = true
   ports {
     internal = "3005"
     external = "3005"
@@ -45,7 +50,7 @@ resource "docker_container" "lunch-app-backend" {
     "DB_NAME=XXX",
     "CLOUD_NAME=XXX",
     "API_KEY=XXX",
-    "API_SECRET=XXX"
+    "API_SECRET=XXX",
   ]
 }
 
