@@ -48,6 +48,14 @@ $ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
 
 ## Terraform
 
+Create SSH Key
+
+```bash
+$ ssh-keygen -t ed25519 -f ~/.ss/hetzner
+```
+
+Next:
+
 ```bash
 $ export TF_VAR_hcloud_token='XXXX'
 $ terraform init
@@ -67,10 +75,16 @@ $ ssh-add ~/.ssh/hetzner
 
 Remove fingerprint if existing already:
 $ ssh-keygen -f "/home/your-username/.ssh/known_hosts" -R ssh root@78.47.42.48
+```
+
+If you can login with:
+```bash
 $ ssh root@78.47.42.48
+```
 
-If this works without a prompt continue with:
+without a password (login) prompt continue with:
 
+```bash
 $ terraform init
 $ terraform apply -target=module.apps
 ```
