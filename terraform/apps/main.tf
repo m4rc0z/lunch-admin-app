@@ -101,8 +101,8 @@ resource "docker_container" "lunch-admin-app" {
     "traefik.http.routers.frontend.entrypoints"="frontend"
     "traefik.http.routers.frontend-secure.rule"="Host(`dev.mealit.de`)"
     "traefik.http.routers.frontend-secure.tls"=true
+    "traefik.http.routers.frontend-secure.tls.certresolver"="lunchmenuapp"
     "traefik.http.routers.frontend-secure.entrypoints"="frontend-secure"
-    "traefik.http.routers.frontend.tls.certresolver"="lunchmenuapp"
   }
 }
 
