@@ -1,9 +1,5 @@
 variable "token" {}
 
-variable "hosts" {
-  default = 0
-}
-
 variable "hostname_format" {
   type = string
 }
@@ -39,14 +35,12 @@ resource "hcloud_ssh_key" "default" {
   public_key = file("~/.ssh/hetzner.pub")
 }
 
-resource "hcloud_server" "host" {
+resource "hcloud_server" "vps" {
   name        = format(var.hostname_format, 1)
   location    = var.location
   image       = var.image
   server_type = var.type
   ssh_keys    = [hcloud_ssh_key.default.name]
-
-  count       = var.hosts
 
   connection {
     user = "root"
@@ -112,7 +106,7 @@ data "hcloud_floating_ip" "dev-ip" {
 }
 resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
   floating_ip_id = data.hcloud_floating_ip.dev-ip.id
-  server_id      = hcloud_server.host[0].id
+  server_id      = hcloud_server.vps.id
 }
 
 output "public_ips" {
