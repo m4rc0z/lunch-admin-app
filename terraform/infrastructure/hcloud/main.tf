@@ -95,8 +95,14 @@ EOT
   }
 
   provisioner "file" {
-    source      = "letsencrypt/dev.mealit.de"
+    source      = "./letsencrypt/dev.mealit.de"
     destination = "/letsencrypt"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 /letsencrypt/acme.json",
+    ]
   }
 }
 
