@@ -55,6 +55,30 @@ resource "hcloud_server" "host" {
     host = self.ipv4_address
   }
 
+  #############################################################################################################
+  # Hetzner Floating IP assignement and setup
+  # see https://wiki.hetzner.de/index.php/Cloud_floating_IP_persistent/en
+  # create /etc/network/interfaces.d/60-my-floating-ip.cfg with the floating ip address and reload the network
+  #############################################################################################################
+  provisioner "file" {
+    content = <<EOT
+auto eth0:1
+iface eth0:1 inet static
+    address ${data.hcloud_floating_ip.dev-ip.ip_address}
+    netmask 32
+EOT
+    destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
+  }
+
+  # After creating the /etc/network/interfaces.d/60-my-floating-ip.cfg with the proper ip address taken from
+  # data.hcloud_floating_ip (with a label key=dev.mealit.de) restart network services to assign ip
+  provisioner "remote-exec" {
+    inline = [
+      "sudo service networking restart",
+    ]
+  }
+  #############################################################################################################
+
   provisioner "file" {
     source      = "scripts/install.sh"
     destination = "/root/install.sh"
@@ -69,6 +93,15 @@ resource "hcloud_server" "host" {
       #"apt-get -qq upgrade -y",
     ]
   }
+}
+
+# get and assign floating ip with a label "key=dev.mealit.de"
+data "hcloud_floating_ip" "dev-ip" {
+  with_selector = "key=dev.mealit.de"
+}
+resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
+  floating_ip_id = data.hcloud_floating_ip.dev-ip.id
+  server_id      = hcloud_server.host[0].id
 }
 
 output "public_ips" {
