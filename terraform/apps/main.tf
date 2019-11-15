@@ -78,7 +78,7 @@ resource "docker_container" "lunch-app-backend" {
   ports {
     internal = "3005"
     external = "3005"
-    #ip       = "127.0.0.1" # enable for security reasons
+    ip       = "127.0.0.1" # enable for security reasons
   }
   networks_advanced {
     name = docker_network.lunch-app-network.id
@@ -95,8 +95,6 @@ resource "docker_container" "lunch-app-backend" {
     "API_SECRET=XXX",
   ]
 }
-
-
 
 # create lunch-admin-app container
 data "docker_registry_image" "lunch-admin-app" {
@@ -125,7 +123,7 @@ resource "docker_container" "lunch-admin-app" {
   ports {
     internal = "80"
     external = "3000"
-    #ip       = "127.0.0.1" # enable for security reasons
+    ip       = "127.0.0.1" # enable for security reasons
   }
   networks_advanced {
     name = docker_network.lunch-app-network.id
