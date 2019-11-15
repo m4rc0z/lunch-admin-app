@@ -84,8 +84,8 @@ resource "docker_container" "lunch-app-backend" {
     name = docker_network.lunch-app-network.id
   }
   env = [
-    "AUTH_DOMAIN=XXX",
-    "AUTH_AUDIENCE=XXX",
+    "AUTH_DOMAIN=lunchmenuapp.eu.auth0.com",
+    "AUTH_AUDIENCE=https://lunchmenuapp/api",
     "DB_USER=XXX",
     "DB_PASSWORD=XXX",
     "DB_HOST=XXX",
