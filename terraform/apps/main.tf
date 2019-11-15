@@ -8,10 +8,53 @@ provider "docker" {
 # create docker volume resource
 
 # create docker network resource
-resource "docker_network" "lunch_network" {
-  name = "lunch_network"
+resource "docker_network" "lunch-app-network" {
+  name = "lunch-app-network"
 }
 
+# create traefik container
+data "docker_registry_image" "lunch-app-traefik" {
+  name = "traefik:v2.0.4"
+}
+resource "docker_image" "lunch-app-traefik" {
+  name          = data.docker_registry_image.lunch-app-traefik.name
+  pull_triggers = [data.docker_registry_image.lunch-app-traefik.sha256_digest]
+}
+resource "docker_container" "lunch-app-traefik" {
+  name     = "lunch-app-traefik"
+  command = [
+    "--log.level=info",
+    "--api.insecure=true",
+    "--providers.docker=true",
+    "--providers.docker.exposedbydefault=false",
+    "--entrypoints.frontend.address=:80",
+    "--entryPoints.frontend-secure.address=:443",
+  ]
+  image    = data.docker_registry_image.lunch-app-traefik.name
+  restart  = "always"
+  must_run = true
+  ports {
+    internal = "80"
+    external = "80"
+  }
+  ports {
+    internal = "443"
+    external = "443"
+  }
+  ports {
+  internal = "8080"
+  external = "8080"
+  }
+  networks_advanced {
+    name = docker_network.lunch-app-network.id
+  }
+  mounts {
+    target = "/var/run/docker.sock"
+    source = "/var/run/docker.sock"
+    type = "bind"
+    read_only = true
+  }
+}
 
 # create lunch-app-backend container
 data "docker_registry_image" "lunch-app-backend" {
@@ -38,7 +81,7 @@ resource "docker_container" "lunch-app-backend" {
     #ip       = "127.0.0.1"
   }
   networks_advanced {
-    name = docker_network.lunch_network.id
+    name = docker_network.lunch-app-network.id
   }
   env = [
     "AUTH_DOMAIN=XXX",
@@ -84,7 +127,7 @@ resource "docker_container" "lunch-admin-app" {
     external = "3000"
   }
   networks_advanced {
-    name = docker_network.lunch_network.id
+    name = docker_network.lunch-app-network.id
   }
   env = [
     "AUTH_DOMAIN=lunchmenuapp.eu.auth0.com",
