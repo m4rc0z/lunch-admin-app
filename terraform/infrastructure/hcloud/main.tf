@@ -106,5 +106,5 @@ resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
 
 output "public_ips" {
   depends_on  = [status]
-  value = hcloud_server.host.*.ipv4_address
+  value = [data.hcloud_floating_ip.dev-ip.ip_address]
 }
