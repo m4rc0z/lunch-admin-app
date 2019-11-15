@@ -24,13 +24,18 @@ resource "docker_container" "lunch-app-traefik" {
   name     = "lunch-app-traefik"
   image    = data.docker_registry_image.lunch-app-traefik.name
   command = [
-  "--log.level=info",
-  "--api.insecure=true",
-  "--providers.docker=true",
-  "--providers.docker.exposedbydefault=false",
-  "--entrypoints.frontend.address=:80",
-  "--entryPoints.frontend-secure.address=:443",
-  ]
+    "--log.level=info",
+    "--api.insecure=true",
+    "--providers.docker=true",
+    "--providers.docker.exposedbydefault=false",
+    "--entrypoints.frontend.address=:80",
+    "--entryPoints.frontend-secure.address=:443",
+    "--certificatesresolvers.lunchmenuapp.acme.httpchallenge=true",
+    "--certificatesresolvers.lunchmenuapp.acme.httpChallenge.entryPoint=frontend",
+    "--certificatesresolvers.lunchmenuapp.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory",
+    "--certificatesresolvers.lunchmenuapp.acme.email=m.zirkenbach@gmx.de",
+    "--certificatesresolvers.lunchmenuapp.acme.storage=/letsencrypt/acme.json",
+]
   restart  = "always"
   must_run = true
   ports {
@@ -49,10 +54,16 @@ resource "docker_container" "lunch-app-traefik" {
     name = docker_network.lunch-app-network.id
   }
   mounts {
-    target = "/var/run/docker.sock"
     source = "/var/run/docker.sock"
+    target = "/var/run/docker.sock"
     type = "bind"
     read_only = true
+  }
+  mounts {
+    source = "/letsencrypt"
+    target = "/letsencrypt"
+    type = "bind"
+    read_only = false
   }
 }
 
@@ -81,16 +92,17 @@ resource "docker_container" "lunch-admin-app" {
     "AUTH_DOMAIN=lunchmenuapp.eu.auth0.com",
     "AUTH_AUDIENCE=https://lunchmenuapp/api",
   ]
-  labels        = {
-  "id"=docker_image.lunch-admin-app.id
-  "traefik.enable"=true
-  "traefik.http.middlewares.lunchapp-admin-redirect-web-secure.redirectscheme.scheme"="https"
-  "traefik.http.routers.frontend.middlewares"="lunchapp-admin-redirect-web-secure"
-  "traefik.http.routers.frontend.rule"="Host(`dev.mealit.de`)"
-  "traefik.http.routers.frontend.entrypoints"="frontend"
-  "traefik.http.routers.frontend-secure.rule"="Host(`dev.mealit.de`)"
-  "traefik.http.routers.frontend-secure.tls"=true
-  "traefik.http.routers.frontend-secure.entrypoints"="frontend-secure"
+  labels = {
+    "id"=docker_image.lunch-admin-app.id
+    "traefik.enable"=true
+    "traefik.http.middlewares.lunchapp-admin-redirect-web-secure.redirectscheme.scheme"="https"
+    "traefik.http.routers.frontend.middlewares"="lunchapp-admin-redirect-web-secure"
+    "traefik.http.routers.frontend.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend.entrypoints"="frontend"
+    "traefik.http.routers.frontend-secure.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend-secure.tls"=true
+    "traefik.http.routers.frontend-secure.entrypoints"="frontend-secure"
+    "traefik.http.routers.frontend.tls.certresolver"="lunchmenuapp"
   }
 }
 
@@ -127,9 +139,9 @@ resource "docker_container" "lunch-app-backend" {
     "API_SECRET=XXX",
   ]
   labels   = {
-  "id"=docker_image.lunch-app-backend.id
-  "traefik.enable"=true
-  "traefik.http.routers.backend.tls"=true
-  "traefik.http.routers.backend.rule"="Host(`dev.mealit.de`) && PathPrefix(`/authenticated/api`)"
+    "id"=docker_image.lunch-app-backend.id
+    "traefik.enable"=true
+    "traefik.http.routers.backend.tls"=true
+    "traefik.http.routers.backend.rule"="Host(`dev.mealit.de`) && PathPrefix(`/authenticated/api`)"
   }
 }
