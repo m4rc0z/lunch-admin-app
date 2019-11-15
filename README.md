@@ -74,7 +74,7 @@ $ ssh-add ~/.ssh/hetzner
 ---------------------------------------------------------------------------------------------------------------------------------
 
 Remove fingerprint if existing already:
-$ ssh-keygen -f "/home/your-username/.ssh/known_hosts" -R ssh root@78.47.42.48
+$ ssh-keygen -R 78.47.42.48
 ```
 
 If you can login with:
