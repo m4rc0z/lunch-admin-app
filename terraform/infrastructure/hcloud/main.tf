@@ -93,6 +93,11 @@ EOT
       #"apt-get -qq upgrade -y",
     ]
   }
+
+  provisioner "file" {
+    source      = "letsencrypt/dev.mealit.de"
+    destination = "/letsencrypt"
+  }
 }
 
 # get and assign floating ip with a label "key=dev.mealit.de"
