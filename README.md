@@ -65,11 +65,14 @@ $ ssh-keygen -t ed25519 -f ~/.ssh/hetzner
 
 Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is used in terraform to assign the floating_ip to the new Hetzner VPS.
 
-![Hetzner Floating IP Step 1](doc/images/hetzner_floating_ip_1.png =250x250).
-
-![Hetzner Floating IP Step 2](doc/images/hetzner_floating_ip_2.png =250x250).
-
-![Hetzner Floating IP Step 3](doc/images/hetzner_floating_ip_3.png =250x250).
+<div>
+    <img src="doc/images/hetzner_floating_ip_1.png" width="350" alt="Hetzner Floating IP Step 1">
+    <br>
+    <img src="doc/images/hetzner_floating_ip_2.png" width="350" alt="Hetzner Floating IP Step 2">
+    <br>
+    <img src="doc/images/hetzner_floating_ip_3.png" width="350" alt="Hetzner Floating IP Step 3">
+    <br>
+</div>
 
 ### Terraform Hetzner
 
