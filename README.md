@@ -48,13 +48,30 @@ $ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
 
 ## Terraform
 
-Create SSH Key
+NOTE: There's still no provider dependency support in Terraform v0.12. The docker provider depends on the `infrastructure/hcloud/` Hetzner VPS to deploy the images, hence the dependency.
+
+The only workaround is to `terraform init` and `terraform apply` twice with the `-target` parameter, see https://github.com/hashicorp/terraform/issues/2430#issuecomment-195430847 for reference.
+
+
+### SSH Key
+
+Create an SSH Key
 
 ```bash
-$ ssh-keygen -t ed25519 -f ~/.ss/hetzner
+$ ssh-keygen -t ed25519 -f ~/.ssh/hetzner
 ```
 
-Next:
+### Hetzner Floating IP
+
+Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is used in terraform to assign the floating_ip to the new Hetzner VPS.
+
+![Hetzner Floating IP Step 1](doc/images/hetzner_floating_ip_1.png =250x250).
+
+![Hetzner Floating IP Step 2](doc/images/hetzner_floating_ip_2.png =250x250).
+
+![Hetzner Floating IP Step 3](doc/images/hetzner_floating_ip_3.png =250x250).
+
+### Terraform Hetzner
 
 ```bash
 $ export TF_VAR_hcloud_token='XXXX'
@@ -82,7 +99,9 @@ If you can login with:
 $ ssh root@78.47.42.48
 ```
 
-without a password (login) prompt continue with:
+without a password (login) prompt continue with "deploying" the docker apps:
+
+### Terraform Docker
 
 ```bash
 $ terraform init
