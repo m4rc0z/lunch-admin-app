@@ -47,8 +47,8 @@ resource "docker_container" "lunch-app-traefik" {
     external = "443"
   }
   ports {
-  internal = "8080"
-  external = "8080"
+    internal = "8080"
+    external = "8080"
   }
   networks_advanced {
     name = docker_network.lunch-app-network.id
