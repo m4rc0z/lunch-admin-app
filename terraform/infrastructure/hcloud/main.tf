@@ -112,10 +112,9 @@ resource "hcloud_floating_ip_assignment" "public-ip" {
   server_id      = hcloud_server.vps.id
 }
 
-## TODO: replace with floating_ip and single value only
-output "public_ips" {
+output "public_ip" {
   depends_on  = [status]
-  value = [data.hcloud_floating_ip.public-ip.ip_address]
+  value = data.hcloud_floating_ip.public-ip.ip_address
 }
 
 output "hetzner_volume_id" {

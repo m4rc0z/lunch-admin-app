@@ -10,7 +10,7 @@ module "infrastructure" {
 
 module "apps" {
   source           = "./apps"
-  public_ips       = module.infrastructure.public_ips
+  public_ip        = module.infrastructure.public_ip
   hcloud_volume_id = module.infrastructure.hetzner_volume_id
   domain           = module.infrastructure.domain
 }

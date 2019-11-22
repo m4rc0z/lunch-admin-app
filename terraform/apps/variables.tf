@@ -1,5 +1,5 @@
-variable "public_ips" {
-  type = list(string)
+variable "public_ip" {
+  type = string
 }
 
 variable "hcloud_volume_id" {

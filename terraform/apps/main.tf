@@ -1,5 +1,5 @@
 provider "docker" {
-  host = "ssh://root@${element(var.public_ips, 0)}:22"
+  host = "ssh://root@${var.public_ip}:22"
   version = "2.5"
 }
 
