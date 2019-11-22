@@ -36,10 +36,10 @@ describe('dateUtil', function() {
     describe('createDate', function() {
         it('should return correct Date', function() {
             const expected = [
-                { dateString: '12.02.1991', date: new Date(1991, 1, 12) },
-                { dateString: '12.03.1991', date: new Date(1991, 2, 12) },
-                { dateString: '12.03.1992', date: new Date(1992, 2, 12) },
-                { dateString: '13.03.1992', date: new Date(1992, 2, 13) },
+                { dateString: '12.02.1991', date: new Date(Date.UTC(1991, 1, 12, 0 ,0)) },
+                { dateString: '12.03.1991', date: new Date(Date.UTC(1991, 2, 12, 0, 0)) },
+                { dateString: '12.03.1992', date: new Date(Date.UTC(1992, 2, 12, 0, 0)) },
+                { dateString: '13.03.1992', date: new Date(Date.UTC(1992, 2, 13, 0, 0)) },
             ];
 
             expected.forEach(obj => {
