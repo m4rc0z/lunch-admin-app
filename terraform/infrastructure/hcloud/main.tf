@@ -62,7 +62,7 @@ resource "hcloud_server" "vps" {
     content = <<EOT
 auto eth0:1
 iface eth0:1 inet static
-    address ${data.hcloud_floating_ip.floating-ip.ip_address}
+    address ${data.hcloud_floating_ip.public-ip.ip_address}
     netmask 32
 EOT
     destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
@@ -104,18 +104,18 @@ resource "hcloud_volume_attachment" "main" {
 }
 
 # get and assign floating ip with a label "key=${var.domain}"
-data "hcloud_floating_ip" "floating-ip" {
+data "hcloud_floating_ip" "public-ip" {
   with_selector = "key=${var.domain}"
 }
-resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
-  floating_ip_id = data.hcloud_floating_ip.floating-ip.id
+resource "hcloud_floating_ip_assignment" "public-ip" {
+  floating_ip_id = data.hcloud_floating_ip.public-ip.id
   server_id      = hcloud_server.vps.id
 }
 
 ## TODO: replace with floating_ip and single value only
 output "public_ips" {
   depends_on  = [status]
-  value = [data.hcloud_floating_ip.floating-ip.ip_address]
+  value = [data.hcloud_floating_ip.public-ip.ip_address]
 }
 
 output "hetzner_volume_id" {
