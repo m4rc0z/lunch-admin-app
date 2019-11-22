@@ -8,6 +8,10 @@ variable "location" {
   type = string
 }
 
+variable "domain" {
+  type = string
+}
+
 variable "type" {
   type = string
 }
@@ -58,14 +62,14 @@ resource "hcloud_server" "vps" {
     content = <<EOT
 auto eth0:1
 iface eth0:1 inet static
-    address ${data.hcloud_floating_ip.dev-ip.ip_address}
+    address ${data.hcloud_floating_ip.floating-ip.ip_address}
     netmask 32
 EOT
     destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
   }
 
   # After creating the /etc/network/interfaces.d/60-my-floating-ip.cfg with the proper ip address taken from
-  # data.hcloud_floating_ip (with a label key=dev.mealit.de) restart network services to assign ip
+  # data.hcloud_floating_ip (with a label key=${var.domain}) restart network services to assign ip
   provisioner "remote-exec" {
     inline = [
       "sudo service networking restart",
@@ -90,7 +94,7 @@ EOT
 }
 
 data "hcloud_volume" "letsencrypt" {
-  with_selector = "key=dev.mealit.de"
+  with_selector = "key=${var.domain}"
 }
 
 resource "hcloud_volume_attachment" "main" {
@@ -99,22 +103,27 @@ resource "hcloud_volume_attachment" "main" {
   automount = true
 }
 
-# get and assign floating ip with a label "key=dev.mealit.de"
-data "hcloud_floating_ip" "dev-ip" {
-  with_selector = "key=dev.mealit.de"
+# get and assign floating ip with a label "key=${var.domain}"
+data "hcloud_floating_ip" "floating-ip" {
+  with_selector = "key=${var.domain}"
 }
 resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
-  floating_ip_id = data.hcloud_floating_ip.dev-ip.id
+  floating_ip_id = data.hcloud_floating_ip.floating-ip.id
   server_id      = hcloud_server.vps.id
 }
 
 ## TODO: replace with floating_ip and single value only
 output "public_ips" {
   depends_on  = [status]
-  value = [data.hcloud_floating_ip.dev-ip.ip_address]
+  value = [data.hcloud_floating_ip.floating-ip.ip_address]
 }
 
 output "hetzner_volume_id" {
-  #depends_on  = [status]
+  depends_on  = [status]
   value = data.hcloud_volume.letsencrypt.id
+}
+
+output "domain" {
+  depends_on  = [status]
+  value = var.domain
 }

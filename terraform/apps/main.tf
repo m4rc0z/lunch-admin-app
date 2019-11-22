@@ -60,7 +60,7 @@ resource "docker_container" "lunch-app-traefik" {
     read_only = true
   }
   mounts {
-    source = "/mnt/HC_Volume_${var.hcloud_volume_id}/letsencrypt/dev.mealit.de"
+    source = "/mnt/HC_Volume_${var.hcloud_volume_id}/letsencrypt/${var.domain}"
     target = "/letsencrypt"
     type = "bind"
     read_only = false
@@ -97,9 +97,9 @@ resource "docker_container" "lunch-admin-app" {
     "traefik.enable"=true
     "traefik.http.middlewares.lunchapp-admin-redirect-web-secure.redirectscheme.scheme"="https"
     "traefik.http.routers.frontend.middlewares"="lunchapp-admin-redirect-web-secure"
-    "traefik.http.routers.frontend.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend.rule"="Host(`${var.domain}`)"
     "traefik.http.routers.frontend.entrypoints"="frontend"
-    "traefik.http.routers.frontend-secure.rule"="Host(`dev.mealit.de`)"
+    "traefik.http.routers.frontend-secure.rule"="Host(`${var.domain}`)"
     "traefik.http.routers.frontend-secure.tls"=true
     "traefik.http.routers.frontend-secure.tls.certresolver"="lunchmenuapp"
     "traefik.http.routers.frontend-secure.entrypoints"="frontend-secure"
@@ -142,6 +142,6 @@ resource "docker_container" "lunch-app-backend" {
     "id"=docker_image.lunch-app-backend.id
     "traefik.enable"=true
     "traefik.http.routers.backend.tls"=true
-    "traefik.http.routers.backend.rule"="Host(`dev.mealit.de`) && PathPrefix(`/authenticated/api`)"
+    "traefik.http.routers.backend.rule"="Host(`${var.domain}`) && PathPrefix(`/authenticated/api`)"
   }
 }

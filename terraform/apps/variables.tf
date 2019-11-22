@@ -5,3 +5,7 @@ variable "public_ips" {
 variable "hcloud_volume_id" {
   type = number
 }
+
+variable "domain" {
+  type = string
+}
