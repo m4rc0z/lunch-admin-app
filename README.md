@@ -78,8 +78,7 @@ Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is u
 
 ```bash
 $ export TF_VAR_hcloud_token='XXXX'
-$ export TF_VAR_hcloud_location='nbg1' ('nbg1' or 'fsn1' or 'hsl1')
-$ export TF_VAR_hcloud_domain='dev.mealit.de'
+$ export TF_VAR_domain='dev.mealit.de'
 $ terraform init
 $ terraform apply -target=module.infrastructure
 

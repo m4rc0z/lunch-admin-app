@@ -1,9 +1,5 @@
 variable "token" {}
 
-variable "hostname_format" {
-  type = string
-}
-
 variable "location" {
   type = string
 }
@@ -40,7 +36,7 @@ resource "hcloud_ssh_key" "default" {
 }
 
 resource "hcloud_server" "vps" {
-  name        = format(var.hostname_format, 1)
+  name        = var.domain
   location    = var.location
   image       = var.image
   server_type = var.type
@@ -120,9 +116,4 @@ output "public_ip" {
 output "hetzner_volume_id" {
   depends_on  = [status]
   value = data.hcloud_volume.letsencrypt.id
-}
-
-output "domain" {
-  depends_on  = [status]
-  value = var.domain
 }

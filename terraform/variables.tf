@@ -1,4 +1,5 @@
 variable "hcloud_token" {}
+variable "domain" {}
 
 variable "hcloud_ssh_keys" {
   type    = list(string)
@@ -27,14 +28,6 @@ variable "hcloud_location" {
 
 variable "docker_version" {
   default = "18.03"
-}
-
-variable "domain" {
-  default = "example.com"
-}
-
-variable "hostname_format" {
-  default = "kube%d"
 }
 
 variable "apt_packages" {
