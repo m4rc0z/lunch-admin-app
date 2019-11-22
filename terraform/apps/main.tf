@@ -69,7 +69,7 @@ resource "docker_container" "lunch-app-traefik" {
 
 # create frontend container
 data "docker_registry_image" "lunch-admin-app" {
-  name = "m4rc0z/lunch-admin-app:dev"
+  name = "m4rc0z/lunch-admin-app:${var.domain}"
 }
 resource "docker_image" "lunch-admin-app" {
   name          = data.docker_registry_image.lunch-admin-app.name
@@ -108,7 +108,7 @@ resource "docker_container" "lunch-admin-app" {
 
 # create backend container
 data "docker_registry_image" "lunch-app-backend" {
-  name = "m4rc0z/lunch-app-backend:latest"
+  name = "m4rc0z/lunch-app-backend:${var.domain}"
 }
 resource "docker_image" "lunch-app-backend" {
   name          = data.docker_registry_image.lunch-app-backend.name
