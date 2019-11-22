@@ -60,7 +60,7 @@ resource "docker_container" "lunch-app-traefik" {
     read_only = true
   }
   mounts {
-    source = "/letsencrypt"
+    source = "/mnt/HC_Volume_${var.hcloud_volume_id}/letsencrypt/dev.mealit.de"
     target = "/letsencrypt"
     type = "bind"
     read_only = false

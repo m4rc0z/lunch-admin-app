@@ -87,17 +87,16 @@ EOT
       #"apt-get -qq upgrade -y",
     ]
   }
+}
 
-  provisioner "file" {
-    source      = "./letsencrypt/dev.mealit.de"
-    destination = "/letsencrypt"
-  }
+data "hcloud_volume" "letsencrypt" {
+  with_selector = "key=dev.mealit.de"
+}
 
-  provisioner "remote-exec" {
-    inline = [
-      "chmod 600 /letsencrypt/acme.json",
-    ]
-  }
+resource "hcloud_volume_attachment" "main" {
+  volume_id = data.hcloud_volume.letsencrypt.id
+  server_id = hcloud_server.vps.id
+  automount = true
 }
 
 # get and assign floating ip with a label "key=dev.mealit.de"
@@ -109,7 +108,13 @@ resource "hcloud_floating_ip_assignment" "floating-ip-dev" {
   server_id      = hcloud_server.vps.id
 }
 
+## TODO: replace with floating_ip and single value only
 output "public_ips" {
   depends_on  = [status]
   value = [data.hcloud_floating_ip.dev-ip.ip_address]
+}
+
+output "hetzner_volume_id" {
+  #depends_on  = [status]
+  value = data.hcloud_volume.letsencrypt.id
 }
