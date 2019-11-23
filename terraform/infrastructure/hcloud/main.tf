@@ -45,7 +45,7 @@ resource "hcloud_server" "vps" {
   connection {
     user = "root"
     type = "ssh"
-    timeout = "2m"
+    timeout = "10m"
     host = self.ipv4_address
   }
 
