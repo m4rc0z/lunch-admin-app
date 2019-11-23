@@ -90,36 +90,54 @@ $ terraform workspace list
   dev
 ```
 
-Next, select the proper workspace:
+Next, for `dev.mealit.de` execute:
 
 ```bash
 $ terraform workspace select dev
 $ export TF_VAR_hcloud_token='XXXX'
 $ export TF_VAR_domain='dev.mealit.de'
+```
+
+or for `admin.mealit.de` execute:
+        
+```bash
+$ terraform workspace select admin
+$ export TF_VAR_hcloud_token='XXXX'
+$ export TF_VAR_domain='admin.mealit.de'
+```
+
+then, continue with:
+
+```bash
 $ terraform init
 $ terraform apply -target=module.infrastructure
+```
 
----------------------------------------------------------------------------------------------------------------------------------
-NOTE: you need to login to the Hetzner server with your ssh key (default: ~/.ssh/dev.mealit.de and ~/.ssh.admin.mealit.de) and accept the fingerprint
+NOTE: you need to login to the Hetzner server with your ssh key (either ~/.ssh/dev.mealit.de and ~/.ssh.admin.mealit.de) and accept the fingerprint
 
 This typically means you need to start an ssh-agent:
 
+```
 $ ssh-agent
+```
 
 and add the ssh key:
 
+```
 $ ssh-add ~/.ssh/dev.mealit.de
 $ ssh-add ~/.ssh/admin.mealit.de
----------------------------------------------------------------------------------------------------------------------------------
 ```
 
-Remove fingerprint if existing already:
-$ ssh-keygen -R 78.47.42.48
+Remove (old) fingerprint if you destroyed a Hetzner VPS and just created a new one:
+```bash
+$ ssh-keygen -R dev.mealit.de
+$ ssh-keygen -R admin.mealit.de
 ```
 
 If you can login with:
 ```bash
-$ ssh root@78.47.42.48
+$ ssh root@dev.mealit.de
+$ ssh root@admin.mealit.de
 ```
 
 without a password (login) prompt continue with "deploying" the docker apps:
