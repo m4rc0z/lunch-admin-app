@@ -55,10 +55,11 @@ The only workaround is to `terraform init` and `terraform apply` twice with the 
 
 ### SSH Key
 
-Create an SSH Key
+Create an SSH Key for each domain:
 
 ```bash
-$ ssh-keygen -t ed25519 -f ~/.ssh/hetzner
+$ ssh-keygen -t ed25519 -f ~/.ssh/admin.mealit.de
+$ ssh-keygen -t ed25519 -f ~/.ssh/dev.mealit.de
 ```
 
 ### Hetzner Floating IP
@@ -76,14 +77,30 @@ Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is u
 
 ### Terraform Hetzner
 
+Create the workspaces (you must be inside the `lunch-admin-app/terraform` directory:
+
 ```bash
+$ terraform workspace new dev
+$ terraform workspace new admin
+
+# Show workspaces 
+$ terraform workspace list
+  default
+* admin
+  dev
+```
+
+Next, select the proper workspace:
+
+```bash
+$ terraform workspace select dev
 $ export TF_VAR_hcloud_token='XXXX'
 $ export TF_VAR_domain='dev.mealit.de'
 $ terraform init
 $ terraform apply -target=module.infrastructure
 
 ---------------------------------------------------------------------------------------------------------------------------------
-NOTE: you need to login to the Hetzner server with your ssh key (default: ~/.ssh/hetzner.pub) and accept the fingerprint
+NOTE: you need to login to the Hetzner server with your ssh key (default: ~/.ssh/dev.mealit.de and ~/.ssh.admin.mealit.de) and accept the fingerprint
 
 This typically means you need to start an ssh-agent:
 
@@ -91,8 +108,10 @@ $ ssh-agent
 
 and add the ssh key:
 
-$ ssh-add ~/.ssh/hetzner
+$ ssh-add ~/.ssh/dev.mealit.de
+$ ssh-add ~/.ssh/admin.mealit.de
 ---------------------------------------------------------------------------------------------------------------------------------
+```
 
 Remove fingerprint if existing already:
 $ ssh-keygen -R 78.47.42.48
