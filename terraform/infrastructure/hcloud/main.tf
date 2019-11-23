@@ -49,36 +49,6 @@ resource "hcloud_server" "vps" {
     host = self.ipv4_address
   }
 
-  #############################################################################################################
-  # Hetzner Floating IP assignement and setup
-  # see https://wiki.hetzner.de/index.php/Cloud_floating_IP_persistent/en
-  # create /etc/network/interfaces.d/60-my-floating-ip.cfg with the floating ip address and reload the network
-  #############################################################################################################
-  provisioner "file" {
-    content = <<EOT
-auto eth0:1
-iface eth0:1 inet static
-    address ${data.hcloud_floating_ip.public-ip.ip_address}
-    netmask 32
-EOT
-    destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "bash -c 'mkdir -p /mnt/HC_Volume_${data.hcloud_volume.letsencrypt.id}/letsencrypt/${var.domain}'",
-    ]
-  }
-
-  # After creating the /etc/network/interfaces.d/60-my-floating-ip.cfg with the proper ip address taken from
-  # data.hcloud_floating_ip (with a label key=${var.domain}) restart network services to assign ip
-  provisioner "remote-exec" {
-    inline = [
-      "sudo service networking restart",
-    ]
-  }
-  #############################################################################################################
-
   provisioner "file" {
     source      = "scripts/install.sh"
     destination = "/root/install.sh"
@@ -103,6 +73,19 @@ resource "hcloud_volume_attachment" "main" {
   volume_id = data.hcloud_volume.letsencrypt.id
   server_id = hcloud_server.vps.id
   automount = true
+
+  connection {
+    user = "root"
+    type = "ssh"
+    timeout = "2m"
+    host = hcloud_server.vps.ipv4_address
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "bash -c 'cd /mnt/HC_Volume_${hcloud_volume_attachment.main.volume_id} && mkdir -p letsencrypt/${var.domain}'",
+    ]
+  }
 }
 
 # get and assign floating ip with a label "key=${var.domain}"
@@ -112,6 +95,37 @@ data "hcloud_floating_ip" "public-ip" {
 resource "hcloud_floating_ip_assignment" "public-ip" {
   floating_ip_id = data.hcloud_floating_ip.public-ip.id
   server_id      = hcloud_server.vps.id
+
+  connection {
+    user = "root"
+    type = "ssh"
+    timeout = "2m"
+    host = hcloud_server.vps.ipv4_address
+  }
+
+  #############################################################################################################
+  # Hetzner Floating IP assignement and setup
+  # see https://wiki.hetzner.de/index.php/Cloud_floating_IP_persistent/en
+  # create /etc/network/interfaces.d/60-my-floating-ip.cfg with the floating ip address and reload the network
+  #############################################################################################################
+  provisioner "file" {
+    content = <<EOT
+auto eth0:1
+iface eth0:1 inet static
+    address ${data.hcloud_floating_ip.public-ip.ip_address}
+    netmask 32
+EOT
+    destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
+  }
+
+  # After creating the /etc/network/interfaces.d/60-my-floating-ip.cfg with the proper ip address taken from
+  # data.hcloud_floating_ip (with a label key=${var.domain}) restart network services to assign ip
+  provisioner "remote-exec" {
+    inline = [
+      "sudo service networking restart",
+    ]
+  }
+  #############################################################################################################
 }
 
 output "public_ip" {
