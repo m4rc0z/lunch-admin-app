@@ -75,6 +75,19 @@ Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is u
     <br>
 </div>
 
+### Hetzner Volume
+
+Create a Hetzner volume for each domain and add the necessary label:
+
+<div>
+    <img src="doc/images/hetzner_volume_1.png" width="350" alt="Hetzner Volume Step 1">
+    <br>
+    <img src="doc/images/hetzner_volume_2.png" width="350" alt="Hetzner Volume Step 2">
+    <br>
+    <img src="doc/images/hetzner_volume_3.png" width="350" alt="Hetzner Volume Step 3">
+    <br>
+</div>
+
 ### Terraform Hetzner
 
 Create the workspaces (you must be inside the `lunch-admin-app/terraform` directory:
@@ -83,7 +96,8 @@ Create the workspaces (you must be inside the `lunch-admin-app/terraform` direct
 $ terraform workspace new dev
 $ terraform workspace new admin
 
-# Show workspaces 
+# Show workspaces
+
 $ terraform workspace list
   default
 * admin
