@@ -31,8 +31,8 @@ variable "apt_packages" {
 }
 
 resource "hcloud_ssh_key" "default" {
-  name       = "root@hcloud"
-  public_key = file("~/.ssh/hetzner.pub")
+  name       = "root@${var.domain}"
+  public_key = file("~/.ssh/${var.domain}.pub")
 }
 
 resource "hcloud_server" "vps" {
