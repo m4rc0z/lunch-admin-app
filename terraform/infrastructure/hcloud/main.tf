@@ -64,6 +64,12 @@ EOT
     destination = "/etc/network/interfaces.d/60-my-floating-ip.cfg"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "bash -c 'mkdir -p /mnt/HC_Volume_${data.hcloud_volume.letsencrypt.id}/letsencrypt/${var.domain}'",
+    ]
+  }
+
   # After creating the /etc/network/interfaces.d/60-my-floating-ip.cfg with the proper ip address taken from
   # data.hcloud_floating_ip (with a label key=${var.domain}) restart network services to assign ip
   provisioner "remote-exec" {
@@ -97,12 +103,6 @@ resource "hcloud_volume_attachment" "main" {
   volume_id = data.hcloud_volume.letsencrypt.id
   server_id = hcloud_server.vps.id
   automount = true
-
-  provisioner "remote-exec" {
-    inline = [
-      "bash -c 'mkdir -p /mnt/HC_Volume_${hcloud_volume_attachment.main.volume_id}/letsencrypt/${var.domain}'",
-    ]
-  }
 }
 
 # get and assign floating ip with a label "key=${var.domain}"
