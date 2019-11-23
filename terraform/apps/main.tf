@@ -142,6 +142,6 @@ resource "docker_container" "lunch-app-backend" {
     "id"=docker_image.lunch-app-backend.id
     "traefik.enable"=true
     "traefik.http.routers.backend.tls"=true
-    "traefik.http.routers.backend.rule"="Host(`${var.domain}`) && PathPrefix(`/authenticated/api`)"
+    "traefik.http.routers.backend.rule"="Host(`${var.domain}`) && PathPrefix(`/authenticated/api`, `/unauthenticated/api`)"
   }
 }
