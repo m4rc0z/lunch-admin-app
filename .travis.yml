@@ -8,8 +8,21 @@ jobs:
     - stage: cypress test
       script:
         - npm run build:run:cypress
-    - stage: build docker image and publish
+    - stage: build latest docker image and publish
+      if: branch != master && branch != release
+      script:
+        - npm run build:latest
+        - npm run docker:login
+        - npm run publish:latest
+    - stage: build dev docker image and publish
+      if: branch = master
+      script:
+        - npm run build:dev
+        - npm run docker:login
+        - npm run publish:dev
+    - stage: build prod docker image and publish
+      if: branch = release
       script:
         - npm run build:prod
         - npm run docker:login
-        - npm run publish:image
+        - npm run publish:prod
