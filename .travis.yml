@@ -1,23 +1,15 @@
-language: node_js
-node_js:
-- node
-addons:
-  apt:
-    packages:
-      - libgconf-2-4
-env: 
-global:
-  secure: PqOWbQeePm1cCJTqYfdglqVrO78IGJQP9ppVz4gINZ2feLPUWOMFKApCGKpmlFVdsccKNZ6Lx6abOMIxCytiQ+dRreoVt4YxuKTEsCuzr5haOpz9xztmYwyW3D5xxuTim0l5pY2XIYYgciC0aihKHiJv4cZgoS4Rhb0cdcJZUubXZhr5dh4vrw9XU4eIUmVx5JH6CZEWqzAYO5z0APl+oAHAvN8BDYcA9gQKsHpexfiL0v2exQt0FHC9UIW9Sw3GsrLWfihnoeasZSG/uTgi1WrRxT6oQUypJiDGoEdjfOvJ0gjrISHbAPLB7U3HWtvo9qni8yv/qCUgIjJt1UF+hk6lHY4DiTr5iFUenfvUQdJcC7pztdpowm8jDKi3gkDVNM/zE8nkkWNz60qwpWpaZGyzYPGOhSimkG8XyJ4MCYuFuUMLWdw0EP8m/5DgJV/GX/tBT71nrOYUbhXhkJS0yDPzUYwLkTt2ixrYnPTTqgjuXMePiZpdZCPADULianwZAj8FbjKYYdkqOV5A+DUVdiCDKX2AtZ5335w8XKSFvM5arZjkSDjZwnVY1E/Bdm7Ed+VMAyOV59bCKy7aif2k42bLaxHJQvKf1PIxom/sEpgbrxnW2qIy7ZeU+DGv1i3bRJCWcmFrjkpAuANlt+5fFIiA14aD5zUnYHVgVcmkU8w=
-cache:
-  directories:
-  - node_modules
-before_script:
-- npm run "start cypress" -- --silent &
-script:
-- npm run cypress:run
-deploy:
-  provider: heroku
-  api_key:
-    secure: MuQh7jLIyru9mw1P4idzfoey2NkLMiED1X8lLjiN3K1/BqF4t8c9qr4EEmyYCtIBF26PCOCd2sekFb3z/u1yxtbmUSgfzaMJJqACUy4382kkgYgW4KvodhAti5u6VDNyon2Wms8iZ850hEUoLVgJS5c0R5MSo05z7npYMItRD0ijzwhhbiGqHNl1krOjMgxU+K1tBNipXVn72jFbFfW9OhTcTsZLmhptUGPS7Xnu2nkOfXiWInu7RfsnySVNQw9KgS0g4NLsZeLHJSDzOqp9MIBh7TZsTMFtfIfUYJcLuHZMpU67qaXBsdSr+ZHh4DrRxRkW665a3fxUNntDFzm4bBnmlqrA7X01EjF7J1n4zNyTxvyHRY8vNIGd0Sc/9W1PB/VoOICWjp88ziqgG/k/vd4NZVqcUqMm5Ha/tZ8OkDR6wV0NOhleUeeuwbXoD628Rg6vKdm8WaAW2+Gc1UQSE62rf/TY6CRFB/DMekUDA4Abr8mIvgoAreTc7xe+8r5log8BOmocIUtuVa58aQtOkO2YIL8QRbg783wyrKT3kMNnHfsQMFci3x4OZijquac8nOp0yNhlUwKO98aIfCqwYUApUGQeqitQk9aQXEKkRRFoQZUXDZ7lmapM1ObO/AODWBBH+f4SF4FHsKmLnzEjjR5350mZNVbkyBmGyH4m8Ns=
-  on:
-    all_branches: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: unit test
+      script:
+        - npm run test:unit
+    - stage: cypress test
+      script:
+        - npm run build:run:cypress
+    - stage: build docker image and publish
+      script:
+        - npm run build:prod
+        - npm run docker:login
+        - npm run publish:image

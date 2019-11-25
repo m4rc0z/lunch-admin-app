@@ -100,7 +100,7 @@ describe('App', () => {
 
     describe('Restaurant Menus Non-Admin', () => {
         describe('Load Menus', () => {
-            it.only('should show requested menus if user is logged in', () => {
+            it('should show requested menus if user is logged in', () => {
                 cy.server();
                 cy.fixture('./getMenusFixture.json').as('getMenusFixture');
                 cy.route(

@@ -17,8 +17,9 @@ ENV REACT_APP_AUTH_DOMAIN=lunchmenuapp.eu.auth0.com
 ENV REACT_APP_AUTH_CLIENT_ID=j2Rh6xocwsiF1IgxvEbfO9wluxidocEX
 ENV REACT_APP_AUTH_AUDIENCE=https://lunchmenuapp/api
 ENV REACT_APP_AUTH_CONTAINER=auth0-login-container
-ENV REACT_APP_CALLBACK_URL=https://dev.mealit.de/callback
-ENV REACT_APP_BACKEND_URL=https://dev.mealit.de
+ENV REACT_APP_CALLBACK_URL=https://traefik.localhost/callback
+ENV REACT_APP_BACKEND_URL=https://traefik.localhost
+ENV REACT_APP_MOCK=true
 ##########################################################################################################################################
 
 # PROD build

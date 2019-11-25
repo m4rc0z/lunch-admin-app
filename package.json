@@ -32,11 +32,15 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "deploy": "now -e NODE_ENV=production --token $NOW_TOKEN --public",
-    "alias": "now alias --token=$NOW_TOKEN"
+    "alias": "now alias --token=$NOW_TOKEN",
+    "test:unit": "docker-compose -f docker-compose_local.yml build test && docker-compose -f docker-compose_local.yml run --rm test",
+    "build:run:cypress": "cd e2e/ && docker-compose build && docker-compose up --abort-on-container-exit",
+    "build:prod": "docker build -t m4rc0z/lunch-admin-app:latest -f Dockerfile .",
+    "docker:login": "echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin",
+    "publish:image": "docker push m4rc0z/lunch-admin-app:latest"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "cypress": "3.3.0",
     "eslint-config-standard": "12.0.0",
     "eslint-config-standard-jsx": "6.0.2",
     "eslint-plugin-cypress": "^2.2.0",
@@ -46,7 +50,6 @@
     "flow-bin": "0.72.0",
     "json-server": "0.14.2",
     "mocha": "5.2.0",
-    "now": "12.1.12",
     "prop-types": "15.6.2",
     "serve": "6.5.7"
   },

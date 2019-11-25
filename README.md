@@ -7,8 +7,14 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 Build container:
 
-``` bash
+```bash
 $ docker build -t m4rc0z/lunch-admin-app .
+```
+
+Publish container:
+
+```bash
+$ docker push m4rc0z/lunch-admin-app
 ```
 
 Run container:
@@ -39,6 +45,123 @@ $ docker run --entrypoint "/bin/sh" -it m4rc0z/lunch-admin-app:latest
 4. Start with: `$ docker-compose -f traefik/docker-compose.yml up`
 5. Access frontend  with: https://traefic.localhost
 6. Access traefik web ui with: http://traefic.localhost:8080/dashboard
+
+## Terraform
+
+NOTE: There's still no provider dependency support in Terraform v0.12. The docker provider depends on the `infrastructure/hcloud/` Hetzner VPS to deploy the images, hence the dependency.
+
+The only workaround is to `terraform init` and `terraform apply` twice with the `-target` parameter, see https://github.com/hashicorp/terraform/issues/2430#issuecomment-195430847 for reference.
+
+
+### SSH Key
+
+Create an SSH Key for each domain:
+
+```bash
+$ ssh-keygen -t ed25519 -f ~/.ssh/admin.mealit.de
+$ ssh-keygen -t ed25519 -f ~/.ssh/dev.mealit.de
+```
+
+### Hetzner Floating IP
+
+Next create a `floating_ip` and add a label `key=dev.mealit.de`. NOTE: this is used in terraform to assign the floating_ip to the new Hetzner VPS.
+
+<div>
+    <img src="doc/images/hetzner_floating_ip_1.png" width="350" alt="Hetzner Floating IP Step 1">
+    <br>
+    <img src="doc/images/hetzner_floating_ip_2.png" width="350" alt="Hetzner Floating IP Step 2">
+    <br>
+    <img src="doc/images/hetzner_floating_ip_3.png" width="350" alt="Hetzner Floating IP Step 3">
+    <br>
+</div>
+
+### Hetzner Volume
+
+Create a Hetzner volume for each domain and add the necessary label:
+
+<div>
+    <img src="doc/images/hetzner_volume_1.png" width="350" alt="Hetzner Volume Step 1">
+    <br>
+    <img src="doc/images/hetzner_volume_2.png" width="350" alt="Hetzner Volume Step 2">
+    <br>
+    <img src="doc/images/hetzner_volume_3.png" width="350" alt="Hetzner Volume Step 3">
+    <br>
+</div>
+
+### Terraform Hetzner
+
+Create the workspaces (you must be inside the `lunch-admin-app/terraform` directory:
+
+```bash
+$ terraform workspace new dev
+$ terraform workspace new admin
+
+# Show workspaces
+
+$ terraform workspace list
+  default
+* admin
+  dev
+```
+
+Next, for `dev.mealit.de` execute:
+
+```bash
+$ terraform workspace select dev
+$ export TF_VAR_hcloud_token='XXXX'
+$ export TF_VAR_domain='dev.mealit.de'
+```
+
+or for `admin.mealit.de` execute:
+        
+```bash
+$ terraform workspace select admin
+$ export TF_VAR_hcloud_token='XXXX'
+$ export TF_VAR_domain='admin.mealit.de'
+```
+
+then, continue with:
+
+```bash
+$ terraform init
+$ terraform apply -target=module.infrastructure
+```
+
+NOTE: you need to login to the Hetzner server with your ssh key (either ~/.ssh/dev.mealit.de and ~/.ssh.admin.mealit.de) and accept the fingerprint
+
+This typically means you need to start an ssh-agent:
+
+```
+$ ssh-agent
+```
+
+and add the ssh key:
+
+```
+$ ssh-add ~/.ssh/dev.mealit.de
+$ ssh-add ~/.ssh/admin.mealit.de
+```
+
+Remove (old) fingerprint if you destroyed a Hetzner VPS and just created a new one:
+```bash
+$ ssh-keygen -R dev.mealit.de
+$ ssh-keygen -R admin.mealit.de
+```
+
+If you can login with:
+```bash
+$ ssh root@dev.mealit.de
+$ ssh root@admin.mealit.de
+```
+
+without a password (login) prompt continue with "deploying" the docker apps:
+
+### Terraform Docker
+
+```bash
+$ terraform init
+$ terraform apply -target=module.apps
+```
 
 ## Table of Contents
 
