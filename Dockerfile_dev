@@ -1,0 +1,27 @@
+FROM node:12.13.0-alpine as builder
+
+##########################################################################################################################################
+# see https://medium.com/free-code-camp/how-to-implement-runtime-environment-variables-with-create-react-app-docker-and-nginx-7f9d42a91d70
+##########################################################################################################################################
+ENV REACT_APP_AUTH_DOMAIN=lunchmenuapp.eu.auth0.com
+ENV REACT_APP_AUTH_CLIENT_ID=j2Rh6xocwsiF1IgxvEbfO9wluxidocEX
+ENV REACT_APP_AUTH_AUDIENCE=https://lunchmenuapp/api
+ENV REACT_APP_AUTH_CONTAINER=auth0-login-container
+ENV REACT_APP_CALLBACK_URL=http://localhost:3000/callback
+ENV REACT_APP_BACKEND_URL=https://lunchbackend:3005
+##########################################################################################################################################
+
+RUN npm install react-scripts@2.1.8 -g --silent
+
+WORKDIR /usr/src/app
+
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+# Install app dependencies
+COPY package-lock.json package.json ./
+
+RUN npm install
+
+CMD npm start
+
+EXPOSE 3000

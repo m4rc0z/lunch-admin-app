@@ -3,6 +3,28 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Below you will find some information on how to perform common tasks.<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
+### Local Setup
+
+#####start frontend:
+
+```bash
+$ npm run start:local
+```
+
+This will start the frontend and it will be available on `http://localhost:3000`
+
+#####start backend:
+
+1. to start the backend you must checkout an other repository:
+
+```bash
+$ git checkout https://github.com/m4rc0z/lunch-app-backend.git
+```
+
+2. to start the backend see instructions for local setup inside the readme of the backend repository
+
+
+
 ## Docker
 
 Build container:
