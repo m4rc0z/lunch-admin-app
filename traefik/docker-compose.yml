@@ -32,7 +32,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.unchapp-admin-redirect-web-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.frontend.middlewares=unchapp-admin-redirect-web-secure"
+      - "traefik.http.routers.frontend.middlewares=lunchapp-admin-redirect-web-secure"
       - "traefik.http.routers.frontend.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.frontend.entrypoints=frontend"
       - "traefik.http.routers.frontend-secure.rule=Host(`traefik.localhost`)"
