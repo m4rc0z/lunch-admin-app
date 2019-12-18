@@ -102,3 +102,23 @@ export const saveRestaurantFailAction = () => ({
     type: saveRestaurantFailActionType,
 });
 
+export const uploadRestaurantImageActionType = '[RESTAURANT] upload restaurant image';
+
+export const uploadRestaurantImageAction = (image, restaurantId) => ({
+    type: uploadRestaurantImageActionType,
+    image,
+    restaurantId
+});
+
+export const uploadRestaurantImageSuccessActionType = '[RESTAURANT] upload restaurant image success';
+
+export const uploadRestaurantImageSuccessAction = () => ({
+    type: uploadRestaurantImageSuccessActionType,
+});
+
+export const uploadRestaurantImageFailActionType = '[RESTAURANT] upload restaurant image fail';
+
+export const uploadRestaurantImageFailAction = () => ({
+    type: uploadRestaurantImageFailActionType,
+});
+
