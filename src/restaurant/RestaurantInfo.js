@@ -1,7 +1,11 @@
 import React from "react";
 import * as PropTypes from "prop-types";
 import connect from "react-redux/es/connect/connect";
-import {saveRestaurantAction, uploadRestaurantImageAction} from "./redux/restaurantActions";
+import {
+    saveRestaurantAction,
+    uploadRestaurantImageAction,
+    uploadRestaurantMapImageAction
+} from "./redux/restaurantActions";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Input from "@material-ui/core/Input/Input";
@@ -24,6 +28,10 @@ function RestaurantInfo(props) {
         props.uploadRestaurantImageAction(image, props.restaurantId);
     };
 
+    const uploadRestaurantMapImageAction = () => {
+        props.uploadRestaurantMapImageAction(image, props.restaurantId);
+    };
+
     const [values, setValues] = React.useState({
         name: undefined,
         address: undefined,
@@ -32,6 +40,9 @@ function RestaurantInfo(props) {
         longitude: undefined,
         latitude: undefined,
         imageUrl: undefined,
+        mapImageUrl: undefined,
+        openingTimesLine1: undefined,
+        openingTimesLine2: undefined,
     });
 
     const [image, setImage] = React.useState({
@@ -43,6 +54,10 @@ function RestaurantInfo(props) {
     };
 
     const handleImageChange = event => {
+        setImage(event.target.files[0]);
+    };
+
+    const handleMapImageChange = event => {
         setImage(event.target.files[0]);
     };
 
@@ -79,6 +94,16 @@ function RestaurantInfo(props) {
                     <Input id="restaurant-latitude" onChange={handleChange('latitude')}
                            defaultValue={props.restaurant && props.restaurant.latitude}/>
                 </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="restaurant-opening-times-1">Öffnungszeiten Zeile 1</InputLabel>
+                    <Input id="restaurant-latitude" onChange={handleChange('openingTimesLine1')}
+                           defaultValue={props.restaurant && props.restaurant.openingTimesLine1}/>
+                </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="restaurant-opening-times-2">Öffnungszeiten Zeile 2</InputLabel>
+                    <Input id="restaurant-latitude" onChange={handleChange('openingTimesLine2')}
+                           defaultValue={props.restaurant && props.restaurant.openingTimesLine2}/>
+                </FormControl>
                 {
                     props.restaurant.imageUrl
                         ? <img src={props.restaurant.imageUrl}></img>
@@ -89,6 +114,18 @@ function RestaurantInfo(props) {
                     <Input type='file' name='image' id="restaurant-image" onChange={handleImageChange}/>
                 </FormControl>
                 <Button onClick={() => uploadRestaurantImageAction()} variant="contained" color="primary">
+                    Upload
+                </Button>
+                {
+                    props.restaurant.imageUrl
+                        ? <img src={props.restaurant.mapImageUrl}></img>
+                        : undefined
+                }
+                <FormControl>
+                    <InputLabel htmlFor="restaurant-map-image">Map Image upload</InputLabel>
+                    <Input type='file' name='image' id="restaurant-map-image" onChange={handleMapImageChange}/>
+                </FormControl>
+                <Button onClick={() => uploadRestaurantMapImageAction()} variant="contained" color="primary">
                     Upload
                 </Button>
                 <Button onClick={() => saveRestaurant()} variant="contained" color="primary">
@@ -104,6 +141,7 @@ RestaurantInfo.propTypes = {
     restaurant: PropTypes.object,
     saveRestaurantAction: PropTypes.func,
     uploadRestaurantImageAction: PropTypes.func,
+    uploadRestaurantMapImageAction: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -113,7 +151,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
     saveRestaurantAction: (restaurant) => dispatch(saveRestaurantAction(restaurant)),
-    uploadRestaurantImageAction: (image, restaurant) => dispatch(uploadRestaurantImageAction(image, restaurant))
+    uploadRestaurantImageAction: (image, restaurant) => dispatch(uploadRestaurantImageAction(image, restaurant)),
+    uploadRestaurantMapImageAction: (image, restaurant) => dispatch(uploadRestaurantMapImageAction(image, restaurant))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantInfo);
