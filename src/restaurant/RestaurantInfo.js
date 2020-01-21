@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import * as PropTypes from "prop-types";
 import connect from "react-redux/es/connect/connect";
 import {
+    getRestaurantCategoriesAction,
     saveRestaurantAction,
     uploadRestaurantImageAction,
     uploadRestaurantMapImageAction
@@ -12,8 +13,13 @@ import Input from "@material-ui/core/Input/Input";
 import Button from "@material-ui/core/Button/Button";
 import {FlexColumnContainer} from "../components/container/FlexContainers";
 import Paper from "@material-ui/core/Paper/Paper";
+import Select from 'react-select';
 
 function RestaurantInfo(props) {
+    useEffect(() => {
+        props.getRestaurantCategoriesAction();
+    }, []);
+
     const saveRestaurant = () => {
         if (props.restaurant) {
             const restaurant = Object.keys(values).reduce((acc, curr) => {
@@ -41,9 +47,20 @@ function RestaurantInfo(props) {
         latitude: undefined,
         imageUrl: undefined,
         mapImageUrl: undefined,
+        categories: undefined,
         openingTimesLine1: undefined,
         openingTimesLine2: undefined,
     });
+
+
+    const [selectedOptions, setSelectedOptions] = React.useState(props.restaurant.categories && props.restaurant.categories.map(c => ({label: c.description, value: c._id})));
+
+    const options = props.categories && props.categories.map(c => ({label: c.description, value: c._id}));
+
+    const handleOptionChange = selected => {
+        setSelectedOptions(selected);
+        setValues({...values, categories: selected.map(o => o.value)})
+    };
 
     const [image, setImage] = React.useState({
         image: undefined,
@@ -104,6 +121,15 @@ function RestaurantInfo(props) {
                     <Input id="restaurant-latitude" onChange={handleChange('openingTimesLine2')}
                            defaultValue={props.restaurant && props.restaurant.openingTimesLine2}/>
                 </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="restaurant-categories">Restaurant Kategorien</InputLabel>
+                    <Select
+                        isMulti={true}
+                        value={selectedOptions}
+                        onChange={handleOptionChange}
+                        options={options}
+                    />
+                </FormControl>
                 {
                     props.restaurant.imageUrl
                         ? <img src={props.restaurant.imageUrl}></img>
@@ -139,18 +165,22 @@ function RestaurantInfo(props) {
 RestaurantInfo.propTypes = {
     restaurantId: PropTypes.string,
     restaurant: PropTypes.object,
+    categories: PropTypes.array,
     saveRestaurantAction: PropTypes.func,
     uploadRestaurantImageAction: PropTypes.func,
     uploadRestaurantMapImageAction: PropTypes.func,
+    getRestaurantCategoriesAction: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
     restaurant: state.restaurants[ownProps.restaurantId],
+    categories: state.restaurants.categories,
     ...ownProps
 });
 
 const mapDispatchToProps = dispatch => ({
     saveRestaurantAction: (restaurant) => dispatch(saveRestaurantAction(restaurant)),
+    getRestaurantCategoriesAction: () => dispatch(getRestaurantCategoriesAction()),
     uploadRestaurantImageAction: (image, restaurant) => dispatch(uploadRestaurantImageAction(image, restaurant)),
     uploadRestaurantMapImageAction: (image, restaurant) => dispatch(uploadRestaurantMapImageAction(image, restaurant))
 });

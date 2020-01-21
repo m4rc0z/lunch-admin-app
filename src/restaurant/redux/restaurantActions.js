@@ -4,6 +4,33 @@ export const getRestaurantsAction = () => ({
     type: getRestaurantsActionType,
 });
 
+export const getRestaurantCategoriesActionType = '[RESTAURANT] get restaurant categories';
+
+export const getRestaurantCategoriesAction = () => ({
+    type: getRestaurantCategoriesActionType,
+});
+
+export const getRestaurantCategoriesSuccessActionType = '[RESTAURANT] success get restaurant categories';
+
+export const getRestaurantCategoriesSuccessAction = (categories) => ({
+    type: getRestaurantCategoriesSuccessActionType,
+    categories
+});
+
+export const updateRestaurantCategoriesActionType = '[RESTAURANT] update restaurant categories';
+
+export const updateRestaurantCategoriesAction = (categories) => ({
+    type: updateRestaurantCategoriesActionType,
+    categories
+});
+
+export const updateRestaurantCategoriesSuccessActionType = '[RESTAURANT] success update restaurant categories';
+
+export const updateRestaurantCategoriesSuccessAction = (categories) => ({
+    type: updateRestaurantCategoriesSuccessActionType,
+    categories
+});
+
 export const showErrorToastActionType = '[GENERAL] error toast';
 
 export const showErrorToastAction = (errorMessage) => ({

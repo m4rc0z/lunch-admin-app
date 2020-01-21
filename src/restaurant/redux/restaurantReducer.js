@@ -1,4 +1,8 @@
-import {setRestaurantActionType, setRestaurantsActionType} from "./restaurantActions";
+import {
+    getRestaurantCategoriesSuccessActionType,
+    setRestaurantActionType,
+    setRestaurantsActionType
+} from "./restaurantActions";
 
 export default (state = {}, action) => {
     switch (action.type) {
@@ -10,6 +14,11 @@ export default (state = {}, action) => {
 
                     return acc;
                 }, {}),
+            };
+        case getRestaurantCategoriesSuccessActionType:
+            return {
+                ...state,
+                categories: action.categories.map((category) => ({_id: category._id, description: category.description})),
             };
         case setRestaurantActionType:
             return {
