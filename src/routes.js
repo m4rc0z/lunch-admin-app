@@ -12,6 +12,7 @@ import Restaurant from "./restaurant/Restaurant";
 import RestaurantMenus from "./menu/RestaurantMenus";
 import * as PropTypes from "prop-types";
 import RestaurantInfo from "./restaurant/RestaurantInfo";
+import Category from "./restaurant/categories/Category";
 
 const StyledInnerContainer = styled.div`
   height: 100%;
@@ -57,6 +58,20 @@ function MainRoutes() {
         <Router history={history}>
             <StyledMainRouteContainer>
                 <Switch>
+                    <Route exact path="/restaurants/categories" render={(props) => {
+                        return (
+                            auth.getIsAdmin()
+                                ?
+                                <StyledRouteContainer>
+                                    <NavBar auth={auth} history={history} landingPage={"false"}/>
+                                    <StyledInnerContainer>
+                                        <Category auth={auth} {...props}/>
+                                    </StyledInnerContainer>
+                                </StyledRouteContainer>
+                                :
+                                <Redirect to={`/restaurants/${auth.getUserId()}`}/>
+                        );
+                    }}/>
                     <Route exact path="/restaurants" render={(props) => {
                         return (
                             auth.getIsAdmin()

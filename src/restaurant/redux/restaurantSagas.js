@@ -6,6 +6,8 @@ import {
     deleteRestaurantMenusForWeekNumberActionType,
     deleteRestaurantMenusSuccessAction,
     deleteRestaurantMenusSuccessActionType,
+    getRestaurantCategoriesActionType,
+    getRestaurantCategoriesSuccessAction,
     getRestaurantMenusAction,
     getRestaurantMenusActionType,
     getRestaurantsActionType,
@@ -20,6 +22,9 @@ import {
     showErrorToastActionType,
     showMenusNotDeletedErrorAction,
     showMenusNotDeletedErrorActionType,
+    updateRestaurantCategoriesActionType,
+    updateRestaurantCategoriesSuccessAction,
+    updateRestaurantCategoriesSuccessActionType,
     updateRestaurantMenusActionType,
     updateRestaurantMenusFailAction,
     updateRestaurantMenusFailActionType,
@@ -29,7 +34,12 @@ import {
     uploadRestaurantImageFailAction,
     uploadRestaurantImageFailActionType,
     uploadRestaurantImageSuccessAction,
-    uploadRestaurantImageSuccessActionType
+    uploadRestaurantImageSuccessActionType,
+    uploadRestaurantMapImageActionType,
+    uploadRestaurantMapImageFailAction,
+    uploadRestaurantMapImageFailActionType,
+    uploadRestaurantMapImageSuccessAction,
+    uploadRestaurantMapImageSuccessActionType
 } from "./restaurantActions";
 import {getFilteredMenusByWeek} from "../../utils/menuUtil";
 import {setShowImportMenuPanelAction} from "../../menu/redux/menuActions";
@@ -78,6 +88,30 @@ export function* watchGetRestaurantMenus() {
                 yield put(showErrorToastAction('Fehler beim Abruf der Menüs'));
             } else {
                 yield put(setRestaurantAction(yield res.json()));
+            }
+        } catch (err) {
+            yield put(showErrorToastAction('Fehler beim Abruf der Menüs'))
+        }
+    });
+}
+
+export function* watchGetRestaurantCategories() {
+    yield takeEvery(getRestaurantCategoriesActionType, function* () {
+        try {
+            const authToken = yield select(getAuthToken);
+
+            const res = yield call(fetch, `/authenticated/api/restaurants/categories`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                }
+            });
+            if (res.status !== 200) {
+                yield put(showErrorToastAction('Fehler beim Abruf der Menüs'));
+            } else {
+                yield put(getRestaurantCategoriesSuccessAction(yield res.json()));
             }
         } catch (err) {
             yield put(showErrorToastAction('Fehler beim Abruf der Menüs'))
@@ -285,6 +319,56 @@ export function* watchUploadRestaurantImageSuccess() {
     })
 }
 
+export function* watchUploadRestaurantMapImage() {
+    yield takeEvery(uploadRestaurantMapImageActionType, function* (action) {
+        try {
+            const formData = new FormData();
+
+            formData.append('image', action.image);
+            const authToken = yield select(getAuthToken);
+            const res = yield call(fetch, `/authenticated/api/restaurants/${action.restaurantId}/mapImage`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: formData,
+            });
+            if (res.status !== 200) {
+                yield [
+                    yield put(uploadRestaurantMapImageFailAction()),
+                ];
+            } else {
+                yield [
+                    yield put(setRestaurantAction(yield res.json())),
+                    yield put(uploadRestaurantMapImageSuccessAction()),
+                ];
+            }
+        } catch (err) {
+            yield put(showErrorToastAction('Fehler beim Upload des Bildes'))
+        }
+    });
+}
+
+export function* watchUploadRestaurantMapImageError() {
+    yield takeEvery(uploadRestaurantMapImageFailActionType, function* (action) {
+        yield put(showErrorToastAction('Fehler beim Upload des Bildes'));
+    })
+}
+
+export function* watchUploadRestaurantMapImageSuccess() {
+    yield takeEvery(uploadRestaurantMapImageSuccessActionType, function* (action) {
+        yield put(showNotificationAction({
+            message: 'Bild erfolgreich gespeichert',
+            options: {
+                variant: 'success',
+                autoHideDuration: 3000,
+            }
+        }));
+        yield put(getRestaurantMenusAction(action.restaurantId));
+    })
+}
+
 export function* watchGetRestaurantsError() {
     yield takeEvery(showErrorToastActionType, function* (action) {
         yield put(showNotificationAction({
@@ -309,6 +393,48 @@ export function* watchDeleteMenusError() {
     })
 }
 
+export function* watchUpdateRestaurantCategories() {
+    yield takeEvery(updateRestaurantCategoriesActionType, function* (action) {
+        try {
+            const authToken = yield select(getAuthToken);
+            const res = yield call(fetch, `/authenticated/api/restaurants/categories`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: JSON.stringify(action.categories),
+            });
+            if (res.status !== 200) {
+                yield [
+                    yield put(showErrorToastAction('Fehler beim Speichern der Kategorien')),
+                ];
+            } else {
+                yield [
+                    yield put(updateRestaurantCategoriesSuccessAction(yield res.json())),
+                ];
+            }
+        } catch (err) {
+            yield put(showErrorToastAction('Fehler beim Speichern der Menüs'))
+        }
+    });
+}
+
+
+export function* watchUpdateRestaurantCategoriesSuccess() {
+    yield takeEvery(updateRestaurantCategoriesSuccessActionType, function* (action) {
+        yield put(showNotificationAction({
+            message: 'Kategorien erfolgreich gespeichert',
+            options: {
+                variant: 'success',
+                autoHideDuration: 3000,
+            }
+        }));
+    })
+}
+
+
 export default function* restaurantSaga() {
     yield all([
         watchGetRestaurants(),
@@ -327,5 +453,11 @@ export default function* restaurantSaga() {
         watchUploadRestaurantImage(),
         watchUploadRestaurantImageSuccess(),
         watchUploadRestaurantImageError(),
+        watchUploadRestaurantMapImage(),
+        watchUploadRestaurantMapImageSuccess(),
+        watchUploadRestaurantMapImageError(),
+        watchGetRestaurantCategories(),
+        watchUpdateRestaurantCategories(),
+        watchUpdateRestaurantCategoriesSuccess()
     ])
 }

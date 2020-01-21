@@ -50,6 +50,17 @@ function SideNavigation(props) {
                         <RestaurantIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Restaurants'}/>
+                </ListItem>}
+                {props.isAdmin && <ListItem
+                    button
+                    key={'RestaurantCategories'}
+                    onClick={() => props.click('restaurants/categories')}
+                    data-cy="restaurantCategoriesBtn"
+                >
+                    <ListItemIcon>
+                        <RestaurantIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Restaurant Categories'}/>
                 </ListItem>
                 }
             </List>
